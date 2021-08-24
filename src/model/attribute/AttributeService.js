@@ -1,11 +1,11 @@
 class AttributeService {
-  createEmptyAttribute = (id = null, type = null) => {
+  createEmptyAttribute = () => {
     return {
-      id: id,
-      type: type,
-      value: null,
+      id: null,
+      type: null,
+      value: this.createEmptyAttributeValue(),
       desc: null,
-      collections: null,
+      collections: [],
     };
   };
 
@@ -13,6 +13,14 @@ class AttributeService {
     return {
       id: id,
       value: value,
+    };
+  };
+
+  createEmptyAttributeValue = () => {
+    return {
+      id: null,
+      value: null,
+      type: null,
     };
   };
 }
