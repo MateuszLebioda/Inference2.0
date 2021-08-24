@@ -24,6 +24,11 @@ class XmlImporter extends Importer {
     console.log(facts);
     console.log(rules);
     this.factId = 0;
+    return {
+      attributes,
+      facts,
+      rules,
+    };
   };
 
   importAttributes = (file) => {

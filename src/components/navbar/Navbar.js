@@ -22,15 +22,17 @@ const Navbar = (props) => {
       icon: "pi pi-fw pi-file",
       items: [
         {
-          label: "Open",
           icon: "pi pi-fw pi-plus",
           template: (
-            <FileUpload
-              mode="basic"
-              onSelect={(e) => handleOpenFile(e)}
-              auto
-              chooseLabel="Open"
-            />
+            <div className="file-upload-hover">
+              <FileUpload
+                className="file-upload-clear-style"
+                mode="basic"
+                onSelect={(e) => handleOpenFile(e)}
+                auto
+                chooseLabel="Import"
+              />
+            </div>
           ),
         },
         {
