@@ -20,9 +20,10 @@ class XmlImporter extends Importer {
     let attributes = this.mapAttributes(xml);
     let facts = this.importFacts(xml);
     let rules = this.importRules(xml);
-    console.log(attributes);
-    console.log(facts);
-    console.log(rules);
+    // console.log(attributes);
+    // console.log(facts);
+    // console.log(rules);
+    // console.log(rules.map((r) => r.conclusion.type));
     this.factId = 0;
     return {
       attributes,
