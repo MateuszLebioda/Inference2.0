@@ -2,8 +2,12 @@ import { Menubar } from "primereact/menubar";
 import "./Navbar.css";
 import { FileUpload } from "primereact/fileupload";
 import ImporterFactory from "../../services/importers/ImporterFactory";
+import { useDispatch } from "react-redux";
+import { blockUI, blockUiWithMessage } from "../../slice/BlockSlice";
 
 const Navbar = (props) => {
+  const dispatch = useDispatch();
+
   const importerFactory = ImporterFactory;
 
   const handleOpenFile = (e) => {

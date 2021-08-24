@@ -18,3 +18,6 @@ export const fileSlice = createSlice({
     },
   },
 });
+
+export const { addNewFile } = fileSlice.actions;
+export default fileSlice.reducer;
