@@ -13,6 +13,7 @@ class ForwardInference extends DefaultInference {
     let newFact;
 
     while ((newFact = this.findNewFact(newFacts, inferenceRules))) {
+      // eslint-disable-next-line no-loop-func
       if (!newFacts.find((nf) => this.factService.equals(nf, newFact))) {
         newFacts.push(newFact);
       }

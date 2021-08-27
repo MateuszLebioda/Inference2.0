@@ -20,10 +20,9 @@ class XmlImporter extends Importer {
     let attributes = this.mapAttributes(xml);
     let facts = this.importFacts(xml);
     let rules = this.importRules(xml);
-    // console.log(attributes);
-    // console.log(facts);
-    // console.log(rules);
-    // console.log(rules.map((r) => r.conclusion.type));
+    console.log(attributes);
+    console.log(facts);
+    console.log(rules);
     this.factId = 0;
     return {
       attributes,
@@ -98,6 +97,14 @@ class XmlImporter extends Importer {
 
     xmlFacts.forEach((xmlFact) => {
       let fact = this.mapElementFromXmlToFact(xmlFact);
+      if (
+        fact.type === attributeType.CONTINOUS &&
+        fact.operator !== operator.EQUALS
+      ) {
+        throw new Error(
+          "Fact have to be symbolic type, or continious with equals operator!"
+        );
+      }
       fact.id = this.factId++;
       tempFacts.push(fact);
     });
@@ -162,6 +169,14 @@ class XmlImporter extends Importer {
     xmlRule.children.forEach((children) => {
       if (children.name === "conclusion") {
         let tempFact = this.mapElementFromXmlToFact(children.children[0]);
+        if (
+          tempFact.type === attributeType.CONTINOUS &&
+          tempFact.operator !== operator.EQUALS
+        ) {
+          throw new Error(
+            "Conculsion have to be symbolic type, or continious with equals operator!"
+          );
+        }
         tempFact.id = this.factId++;
         tempRule.conclusion = tempFact;
       } else if (children.name === "conditions") {

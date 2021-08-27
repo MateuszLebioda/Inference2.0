@@ -2,7 +2,6 @@ import { Menubar } from "primereact/menubar";
 import "./Navbar.css";
 import { FileUpload } from "primereact/fileupload";
 import ImporterFactory from "../../services/importers/ImporterFactory";
-import ForwardInference from "../../services/inferance/ForwardInference";
 
 const Navbar = (props) => {
   const importerFactory = ImporterFactory;
