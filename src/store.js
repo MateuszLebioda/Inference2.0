@@ -2,9 +2,11 @@ import { configureStore } from "@reduxjs/toolkit";
 import fileSlice from "./slice/FileSlice";
 import blockSlice from "./slice/BlockSlice";
 
-export default configureStore({
+const store = configureStore({
   reducer: {
-    files: fileSlice,
+    file: fileSlice,
     block: blockSlice,
   },
 });
+
+export default store;

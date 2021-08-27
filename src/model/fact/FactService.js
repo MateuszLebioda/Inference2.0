@@ -16,5 +16,25 @@ class FactService {
       f1.value === f2.value
     );
   };
+
+  updateValue = (fact, newValue) => {
+    return { ...fact, value: newValue };
+  };
+
+  replaceFacts = (fact, updatedFacts) => {
+    let tempFact = [...fact];
+    updatedFacts.forEach((updatedRule) => {
+      tempFact = this.replaceFact(tempFact, updatedRule);
+    });
+    return tempFact;
+  };
+
+  replaceFact = (facts, updatedFact) => {
+    let tempFacts = [...facts];
+    let index = tempFacts.findIndex((r) => r.id === updatedFact.id);
+    tempFacts.splice(index, 1, updatedFact);
+
+    return tempFacts;
+  };
 }
 export default FactService;
