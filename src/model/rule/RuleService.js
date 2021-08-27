@@ -7,6 +7,18 @@ class RuleService {
     };
   };
 
+  createEmptyRuleToInference = (rule = null) => {
+    let tempRule;
+    tempRule.activated = false;
+    if (rule) {
+      tempRule = this.copyRule(rule);
+    } else {
+      tempRule = this.createEmptyRule();
+    }
+    tempRule.activated = false;
+    return tempRule;
+  };
+
   copyRule = (rule) => {
     let tempRule = this.createEmptyRule();
     tempRule.conclusion = rule.conclusion;
@@ -18,9 +30,7 @@ class RuleService {
     let tempRules = [];
 
     rules.forEach((rule) => {
-      let tempRule = this.copyRule(rule);
-      tempRule.activated = false;
-      tempRules.push(tempRule);
+      tempRules.push(this.createEmptyRuleToInference(rule));
     });
 
     return tempRules;
