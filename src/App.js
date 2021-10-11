@@ -4,7 +4,9 @@ import "primeicons/primeicons.css";
 import Navbar from "./components/navbar/Navbar";
 import { BlockUI } from "primereact/blockui";
 import { useSelector } from "react-redux";
-
+import Content from "./components/content/Content";
+import "./global-style.css";
+import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 const App = () => {
   const blockUI = useSelector((state) => state.block);
 
@@ -21,6 +23,11 @@ const App = () => {
         }
       />
       <Navbar />
+      {/* <TabView>
+        <TabPanel header={file.value.name}> */}
+      <Content />
+      {/* </TabPanel>
+      </TabView> */}
     </>
   );
 };

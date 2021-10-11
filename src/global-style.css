@@ -1,0 +1,29 @@
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.start-from-right {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.center-vertical {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.disable-header .p-datatable-wrapper .p-datatable-thead tr th {
+  padding: 0;
+  border: 0 solid;
+}
+
+.error-icon-color i {
+  color: rgb(185, 0, 0) !important;
+}
+
+.temp-element-icon i {
+  color: #28a450 !important;
+  font-weight: 500;
+}

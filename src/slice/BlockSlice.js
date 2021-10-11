@@ -23,3 +23,6 @@ export const blockSlice = createSlice({
 
 export const { blockUI, unBlockUi, blockUiWithMessage } = blockSlice.actions;
 export default blockSlice.reducer;
+
+export const START_IMPORT = "Importuję dane z pliku...";
+export const SAVE_CHANGES = "Zapisuję zmiany...";
