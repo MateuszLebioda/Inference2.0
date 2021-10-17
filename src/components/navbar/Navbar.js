@@ -2,17 +2,19 @@ import { Menubar } from "primereact/menubar";
 import "./Navbar.css";
 import { FileUpload } from "primereact/fileupload";
 import ImporterFactory from "../../services/importers/ImporterFactory";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   blockUiWithMessage,
   START_IMPORT,
   unBlockUi,
 } from "../../slice/BlockSlice";
 import { updateElement } from "../../slice/FileSlice";
+import history from "../../services/history";
+import { Chip } from "primereact/chip";
 
 const Navbar = (props) => {
+  const historySlice = useSelector((state) => state.history);
   const importerFactory = ImporterFactory;
-
   const dispatch = useDispatch();
 
   const handleOpenFile = (e) => {
@@ -54,28 +56,49 @@ const Navbar = (props) => {
     {
       label: "Nawiguj",
       icon: "pi pi-map",
-      items: [
-        {
-          label: "Atrybuty",
-          icon: "pi pi-home",
-        },
-        {
-          label: "Fakty",
-          icon: "pi pi-search",
-        },
-        {
-          label: "Reguły",
-          icon: "pi pi-question-circle",
-        },
-      ],
+      items: Labels.map((l) => {
+        return {
+          label: l.value,
+          icon: `pi ${l.icon}`,
+          command: l.command,
+        };
+      }),
     },
   ];
 
+  const endTemplate = () => {
+    return (
+      <Chip
+        label={historySlice.value}
+        style={{ marginRight: "15px", cursor: "default" }}
+        icon={`pi ${Labels.find((l) => l.value === historySlice.value).icon}`}
+      />
+    );
+  };
+
   return (
     <>
-      <Menubar model={items} />
+      <Menubar model={items} end={endTemplate} />
     </>
   );
 };
 
 export default Navbar;
+
+const Labels = [
+  {
+    value: "Attributes",
+    icon: "pi pi-home",
+    command: () => history.push("/attributes"),
+  },
+  {
+    value: "Facts",
+    icon: "pi pi-search",
+    command: () => history.push("/facts"),
+  },
+  {
+    value: "Rules",
+    icon: "pi-question-circle",
+    command: () => history.push("/rules"),
+  },
+];

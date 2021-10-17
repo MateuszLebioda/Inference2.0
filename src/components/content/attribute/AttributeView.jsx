@@ -17,15 +17,20 @@ import DimensionsService from "../../../services/tools/DimensionsService";
 import AttributeEditDialog from "./AttributeEditDialog";
 import IconLikeButton from "../../custom/IconLikeButton/IconLikeButton";
 import { DEPENDENT_ATTRIBUTE } from "../../../services/validators/AttributeValidator";
-import UpdateModelService from "../../../services/model/UpdateModelService";
 import { Menu } from "primereact/menu";
 import AttributeService from "../../../model/attribute/AttributeService";
 import IdService from "../../../services/IdService";
+import UpdateModelService from "../../../services/model/UpdateModelService";
+import { changeHistory } from "../../../slice/HistorySlice";
 
 const AttributeView = () => {
   const updateModelService = new UpdateModelService();
   const menu = useRef(null);
   const attributeService = new AttributeService();
+
+  useEffect(() => {
+    dispatch(changeHistory("Attributes"));
+  }, []);
 
   const menuItems = [
     {

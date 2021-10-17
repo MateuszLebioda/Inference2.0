@@ -1,17 +1,19 @@
-import { TabView, TabPanel } from "primereact/tabview";
+import { Router, Route, Switch } from "react-router-dom";
 import AttributeView from "./attribute/AttributeView";
+import history from "../../services/history";
+import FactView from "./fact/FactView";
+import RuleView from "./rules/RuleView";
 
 const Content = () => {
-  //   const file = useSelector((state) => state.file);
-
   return (
-    <TabView>
-      <TabPanel header={"Atrybuty"}>
-        <AttributeView />
-      </TabPanel>
-      <TabPanel header={"Fakty"}></TabPanel>
-      <TabPanel header={"Reguły"}></TabPanel>
-    </TabView>
+    <Router history={history}>
+      <Switch>
+        <Route path="/attributes" component={AttributeView} />
+        <Route path="/facts" component={FactView} />
+        <Route path="/rules" component={RuleView} />
+        <Route path="/" component={AttributeView} />
+      </Switch>
+    </Router>
   );
 };
 

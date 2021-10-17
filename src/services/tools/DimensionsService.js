@@ -8,7 +8,7 @@ class DimensionsService {
   };
 
   getStandardRowCount = () => {
-    return Math.floor((this.getWindowDimensions().height - 258) / 44.6);
+    return Math.floor((this.getWindowDimensions().height - 205) / 44.6);
   };
 }
 export default new DimensionsService();
