@@ -98,9 +98,7 @@ const AttributeView = () => {
             rejectLabel: "Nie",
             style: { width: "400px" },
             accept: () =>
-              updateModelService.deleteAttributes(a).then((r) => {
-                console.log("udało się");
-              }),
+              updateModelService.deleteAttributes(a).then((r) => {}),
             reject: () => {},
           });
         } else {

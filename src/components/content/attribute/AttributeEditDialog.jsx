@@ -253,8 +253,6 @@ const AttributeEditDialog = (props) => {
     );
   };
 
-  console.log(tempAttribute ? tempAttribute.type : null);
-
   return (
     <Dialog
       header={`Edycja atrybutu`}

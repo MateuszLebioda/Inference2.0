@@ -2,6 +2,21 @@ import store from "../../store";
 import { objectType } from "../../model/enumeration/ObjectType";
 
 class DependencyService {
+  getCompleteFacts = (facts) => {
+    let attributes = [...store.getState().file.value.attributes];
+    if (!attributes) {
+      return [];
+    }
+    return facts
+      .map((f) => {
+        let attributeName = attributes.find(
+          (a) => a.id === f.attributeID
+        ).value;
+        return { ...f, attributeName: attributeName };
+      })
+      .sort((f1, f2) => f1.attributeName.localeCompare(f2.attributeName));
+  };
+
   isAttributeDependent = (attribute) => {
     let facts = [...store.getState().file.value.facts];
     let rules = [...store.getState().file.value.rules];
