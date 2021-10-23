@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Column } from "primereact/column";
+import { confirmDialog } from "primereact/confirmdialog";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { Menu } from "primereact/menu";
@@ -44,6 +45,20 @@ const FactView = (props) => {
       className: "p-button-danger",
       tooltip: "Usuń fakt",
       tooltipPosition: "left",
+      action: (f) => {
+        confirmDialog({
+          position: "right",
+          header: "Potwierdź usunięcie",
+          message: "Czy na pewno chcesz usunąć fakt?",
+          icon: "pi pi-trash",
+          acceptClassName: "p-button-danger",
+          acceptLabel: "Tak",
+          rejectLabel: "Nie",
+          style: { width: "400px" },
+          accept: () => updateModelService.deleteFact(f),
+          reject: () => {},
+        });
+      },
     },
     {
       icon: "pi-pencil",
@@ -80,9 +95,7 @@ const FactView = (props) => {
   const renderHeader = () => {
     return (
       <div className="space-between" style={{ fontSize: "17px" }}>
-        <div style={{ marginTop: "auto", marginBottom: "auto" }}>
-          Lista Faktów
-        </div>
+        <div style={{ margin: "auto" }}>Lista Faktów</div>
         <span className="p-input-icon-left">
           <i className="pi pi-search" />
           <InputText

@@ -135,7 +135,11 @@ const AttributeView = () => {
   const renderHeader = () => {
     return (
       <div className="space-between" style={{ fontSize: "17px" }}>
-        <div style={{ marginTop: "auto", marginBottom: "auto" }}>
+        <div
+          style={{
+            margin: "auto",
+          }}
+        >
           Lista Atrybutów
         </div>
         <span className="p-input-icon-left">

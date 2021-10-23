@@ -14,6 +14,18 @@ class UpdateModelService {
   factService = new FactService();
   attributeService = new AttributeService();
 
+  deleteFact = (fact) => {
+    store.dispatch(
+      updateElement({
+        attributes: [...store.getState().file.value.attributes],
+        facts: [...store.getState().file.value.facts].filter(
+          (f) => f.id !== fact.id
+        ),
+        rules: [...store.getState().file.value.rules],
+      })
+    );
+  };
+
   addNewFact = (fact) => {
     let tempFacts = [...store.getState().file.value.facts];
 
