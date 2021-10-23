@@ -36,5 +36,16 @@ class FactService {
 
     return tempFacts;
   };
+
+  getFactToEdit = (fact) => {
+    let tempFact = { ...fact };
+    tempFact.defaultValue = fact.value;
+    tempFact.defaultAttributeID = fact.attributeID;
+
+    tempFact.errors = [];
+    tempFact.warnings = [];
+
+    return tempFact;
+  };
 }
 export default FactService;

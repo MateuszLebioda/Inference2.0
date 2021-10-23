@@ -20,8 +20,8 @@ import { DEPENDENT_ATTRIBUTE } from "../../../services/validators/AttributeValid
 import { Menu } from "primereact/menu";
 import AttributeService from "../../../model/attribute/AttributeService";
 import IdService from "../../../services/IdService";
-import UpdateModelService from "../../../services/model/UpdateModelService";
 import { changeHistory } from "../../../slice/HistorySlice";
+import UpdateModelService from "../../../services/model/UpdateModelService";
 
 const AttributeView = () => {
   const updateModelService = new UpdateModelService();
@@ -215,6 +215,7 @@ const AttributeView = () => {
             </div>
           )}
         />
+        <Column style={{ width: "0px" }} body={() => null} />
       </DataTable>
       <Dialog
         header={`${
