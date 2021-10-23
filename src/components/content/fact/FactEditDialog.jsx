@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { attributeType } from "../../../model/attribute/AttributeType";
 import FactService from "../../../model/fact/FactService";
-import IdService from "../../../services/IdService";
 import FactValidator, {
   FACT_ATTRIBUTES_ERRORS,
   FACT_VALUE_ERRORS,
@@ -21,7 +20,6 @@ const FactEditDialog = (props) => {
   const validator = new FactValidator();
 
   const attributes = useSelector((state) => state.file.value.attributes);
-  const facts = useSelector((state) => state.file.value.facts);
 
   const [fact, setFact] = useState(null);
 
@@ -29,7 +27,7 @@ const FactEditDialog = (props) => {
     if (props.fact || props.newFact) {
       let tempFact = { ...props.fact };
       if (props.newFact) {
-        tempFact = factService.createEmptyFact(IdService.getId(facts));
+        tempFact = factService.createEmptyFact();
         tempFact.type = attributeType.CONTINOUS;
       }
       tempFact = factService.getFactToEdit(tempFact);
@@ -121,6 +119,7 @@ const FactEditDialog = (props) => {
   const handleSave = () => {
     let tempFact = { ...fact };
     delete tempFact.errors;
+    delete tempFact.warnings;
     delete tempFact.defaultAttributeID;
     delete tempFact.defaultValue;
     setFact(null);
@@ -200,6 +199,7 @@ const FactEditDialog = (props) => {
     if (props.newFact) {
       return (
         <AttributeTypeDropdown
+          style={{ width: "150px" }}
           selected={fact && fact.type}
           changeType={(e) => updateFactType(e)}
         />
