@@ -5,6 +5,7 @@ import RuleService from "../../model/rule/RuleService";
 import { updateElement } from "../../slice/FileSlice";
 import store from "../../store";
 import DependencyService from "../dependency/DependencyService";
+import IdService from "../IdService";
 
 class UpdateModelService {
   attributeService = new AttributeService();
@@ -12,6 +13,54 @@ class UpdateModelService {
   ruleService = new RuleService();
   factService = new FactService();
   attributeService = new AttributeService();
+
+  deleteFact = (fact) => {
+    store.dispatch(
+      updateElement({
+        attributes: [...store.getState().file.value.attributes],
+        facts: [...store.getState().file.value.facts].filter(
+          (f) => f.id !== fact.id
+        ),
+        rules: [...store.getState().file.value.rules],
+      })
+    );
+  };
+
+  addNewFact = (fact) => {
+    let tempFacts = [...store.getState().file.value.facts];
+
+    fact.id = IdService.getId(tempFacts);
+
+    store.dispatch(
+      updateElement({
+        attributes: [...store.getState().file.value.attributes],
+        facts: tempFacts.concat([fact]),
+        rules: [...store.getState().file.value.rules],
+      })
+    );
+
+    return Promise.resolve(fact);
+  };
+
+  updateFact = (fact) => {
+    let attributes = [...store.getState().file.value.attributes];
+    let rules = [...store.getState().file.value.rules];
+
+    let tempFacts = this.factService.replaceFact(
+      [...store.getState().file.value.facts],
+      fact
+    );
+
+    store.dispatch(
+      updateElement({
+        attributes: attributes,
+        facts: tempFacts,
+        rules: rules,
+      })
+    );
+
+    return Promise.resolve(fact);
+  };
 
   deleteAttributes = (attribute) => {
     let rules = [...store.getState().file.value.rules];
@@ -41,11 +90,12 @@ class UpdateModelService {
   };
 
   addAttribute = (attribute) => {
+    let attributes = [...store.getState().file.value.attributes];
+    let id = IdService.getId(attributes);
+    let tempAttribute = { ...attribute, id: id };
     store.dispatch(
       updateElement({
-        attributes: [...store.getState().file.value.attributes].concat([
-          attribute,
-        ]),
+        attributes: attributes.concat([tempAttribute]),
         facts: [...store.getState().file.value.facts],
         rules: [...store.getState().file.value.rules],
       })

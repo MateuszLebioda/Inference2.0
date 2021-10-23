@@ -1,3 +1,5 @@
+import operator from "../operator/Operator";
+
 class FactService {
   createEmptyFact = (id) => {
     return {
@@ -5,7 +7,7 @@ class FactService {
       attributeID: null,
       type: null,
       value: null,
-      operator: null,
+      operator: operator.EQUALS,
     };
   };
 
@@ -35,6 +37,17 @@ class FactService {
     tempFacts.splice(index, 1, updatedFact);
 
     return tempFacts;
+  };
+
+  getFactToEdit = (fact) => {
+    let tempFact = { ...fact };
+    tempFact.defaultValue = fact.value;
+    tempFact.defaultAttributeID = fact.attributeID;
+
+    tempFact.errors = [];
+    tempFact.warnings = [];
+
+    return tempFact;
   };
 }
 export default FactService;

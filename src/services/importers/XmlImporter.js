@@ -51,7 +51,7 @@ class XmlImporter extends Importer {
       tempAttributes.push(attribute);
     });
 
-    return tempAttributes;
+    return tempAttributes.sort((a1, a2) => a1.value.localeCompare(a2.value));
   };
 
   mapElementFromXmlToAttribute = (element) => {
