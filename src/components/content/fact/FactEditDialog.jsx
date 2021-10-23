@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { attributeType } from "../../../model/attribute/AttributeType";
 import FactService from "../../../model/fact/FactService";
+import IdService from "../../../services/IdService";
 import FactValidator, {
+  FACT_ATTRIBUTES_ERRORS,
   FACT_VALUE_ERRORS,
 } from "../../../services/validators/FactValidator";
 import ActionIconButton from "../../custom/ActionIconButton/ActionIconButton";
+import AttributeTypeDropdown from "../../custom/AttributeTypeDropdown/AttributeTypeDropdown";
 import AttributeTypeTemplate from "../../custom/AttributeTypeTemplate/AttributeTypeTemplate";
 import FloatDropdown from "../../custom/FloatDropdown/FloatDropdown";
 import FloatInputNumber from "../../custom/FloatInputNumber/FloatInputNumber";
@@ -18,18 +21,27 @@ const FactEditDialog = (props) => {
   const validator = new FactValidator();
 
   const attributes = useSelector((state) => state.file.value.attributes);
+  const facts = useSelector((state) => state.file.value.facts);
 
   const [fact, setFact] = useState(null);
 
   useEffect(() => {
-    if (props.fact) {
-      setFact(factService.getFactToEdit(props.fact));
+    if (props.fact || props.newFact) {
+      let tempFact = { ...props.fact };
+      if (props.newFact) {
+        tempFact = factService.createEmptyFact(IdService.getId(facts));
+        tempFact.type = attributeType.CONTINOUS;
+      }
+      tempFact = factService.getFactToEdit(tempFact);
+      tempFact.errors = validator.validateEmptyValue(tempFact);
+      tempFact.errors = validator.validateAttribute(tempFact);
+      setFact(tempFact);
     }
-  }, [props.fact]);
+  }, [props.fact, props.newFact]);
 
   const getNameOptions = () => {
-    if (props.fact) {
-      return attributes.filter((a) => a.type === props.fact.type);
+    if (fact) {
+      return attributes.filter((a) => a.type === fact.type);
     }
     return [];
   };
@@ -53,6 +65,7 @@ const FactEditDialog = (props) => {
       attributeID: originalAttribute.id,
     };
     let errors = validator.validateEmptyValue(tempFact);
+    errors = validator.validateAttribute(tempFact);
     setFact({
       ...tempFact,
       errors: errors,
@@ -68,6 +81,23 @@ const FactEditDialog = (props) => {
     setFact({
       ...tempFact,
       errors: errors,
+    });
+  };
+
+  const updateFactType = (type) => {
+    let tempFact = {
+      ...fact,
+      type: type,
+      attributeID: null,
+      attributeName: null,
+      value: null,
+    };
+
+    tempFact.errors = validator.validateEmptyValue(tempFact);
+    tempFact.errors = validator.validateAttribute(tempFact);
+
+    setFact({
+      ...tempFact,
     });
   };
 
@@ -149,7 +179,12 @@ const FactEditDialog = (props) => {
   };
 
   const getButtonTemplate = () => {
-    if (props.fact && fact && !factService.equals(fact, props.fact)) {
+    if (
+      props.fact &&
+      fact &&
+      !factService.equals(fact, props.fact) &&
+      !props.newFact
+    ) {
       return (
         <ActionIconButton
           style={{ width: "80px", marginRight: "15px" }}
@@ -158,6 +193,19 @@ const FactEditDialog = (props) => {
           action={() => restoreDefaultValues()}
         />
       );
+    }
+  };
+
+  const getTypeTemplate = () => {
+    if (props.newFact) {
+      return (
+        <AttributeTypeDropdown
+          selected={fact && fact.type}
+          changeType={(e) => updateFactType(e)}
+        />
+      );
+    } else {
+      return <AttributeTypeTemplate option={fact && fact.type} />;
     }
   };
 
@@ -174,6 +222,11 @@ const FactEditDialog = (props) => {
     >
       <div className="space-between" style={{ marginTop: "20px" }}>
         <FloatDropdown
+          errors={
+            fact
+              ? fact.errors.filter((e) => FACT_ATTRIBUTES_ERRORS.includes(e))
+              : []
+          }
           label="Nazwa atrybutu"
           style={{ width: "100%" }}
           value={fact ? fact.attributeName : ""}
@@ -189,7 +242,7 @@ const FactEditDialog = (props) => {
         </div>
         {getValueTemplate()}
         {getButtonTemplate()}
-        <AttributeTypeTemplate option={fact && fact.type} />
+        {getTypeTemplate()}
       </div>
     </Dialog>
   );

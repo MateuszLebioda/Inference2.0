@@ -1,3 +1,5 @@
+import operator from "../operator/Operator";
+
 class FactService {
   createEmptyFact = (id) => {
     return {
@@ -5,7 +7,7 @@ class FactService {
       attributeID: null,
       type: null,
       value: null,
-      operator: null,
+      operator: operator.EQUALS,
     };
   };
 

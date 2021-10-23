@@ -11,9 +11,7 @@ class DefaultValidator {
 
   removeError = (errors, error) => {
     let tempErrors = [...errors];
-
-    tempErrors = tempErrors.filter((e) => e.name !== error.name);
-
+    tempErrors = tempErrors.filter((e) => e.key !== error.key);
     return tempErrors;
   };
 
