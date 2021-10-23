@@ -2,7 +2,8 @@
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
-import { useEffect, useState } from "react";
+import { Menu } from "primereact/menu";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DependencyService from "../../../services/dependency/DependencyService";
 import UpdateModelService from "../../../services/model/UpdateModelService";
@@ -15,6 +16,7 @@ import FactEditDialog from "./FactEditDialog";
 const FactView = (props) => {
   const dispatch = useDispatch();
   const updateModelService = new UpdateModelService();
+  const menu = useRef(null);
 
   const facts = useSelector((state) => state.file.value.facts);
   const attributes = useSelector((state) => state.file.value.attributes);
@@ -57,6 +59,20 @@ const FactView = (props) => {
     },
   ];
 
+  const menuItems = [
+    {
+      label: "Dodaj fakt",
+      icon: "pi pi-plus",
+      command: () => {
+        setEditDialog({
+          visible: true,
+          fact: null,
+          newFact: true,
+        });
+      },
+    },
+  ];
+
   const getButtonSectionWidth = () => {
     return `calc(35px + ${buttons.length * 35}px)`;
   };
@@ -73,6 +89,12 @@ const FactView = (props) => {
             type="search"
             onInput={(e) => setGlobalFilter(e.target.value)}
             placeholder="Wyszukaj..."
+          />
+          <ActionIconButton
+            tooltip="Więcej..."
+            icon="pi-ellipsis-v"
+            className="p-button-secondary"
+            action={(event) => menu.current.toggle(event)}
           />
         </span>
       </div>
@@ -155,6 +177,7 @@ const FactView = (props) => {
       <FactEditDialog
         visible={editDialog.visible}
         fact={editDialog.fact}
+        newFact={editDialog.newFact}
         onHide={() =>
           setEditDialog({
             fact: null,
@@ -162,16 +185,22 @@ const FactView = (props) => {
           })
         }
         onSave={(e) => {
+          delete e.attributeName;
+
+          if (editDialog.newFact) {
+            updateModelService.addNewFact(e);
+          } else {
+            updateModelService.updateFact(e);
+          }
+
           setEditDialog({
             fact: null,
             visible: false,
+            newFact: false,
           });
-
-          delete e.attributeName;
-
-          updateModelService.updateFact(e);
         }}
       />
+      <Menu model={menuItems} popup ref={menu} id="popup_menu" />
     </>
   );
 };
