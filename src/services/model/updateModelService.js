@@ -17,11 +17,10 @@ class UpdateModelService {
     let attributes = [...store.getState().file.value.attributes];
     let rules = [...store.getState().file.value.rules];
 
-    delete fact.attributeName;
-
-    let tempFacts = this.factService.replaceFact(fact, [
-      ...store.getState().file.value.facts,
-    ]);
+    let tempFacts = this.factService.replaceFact(
+      [...store.getState().file.value.facts],
+      fact
+    );
 
     store.dispatch(
       updateElement({

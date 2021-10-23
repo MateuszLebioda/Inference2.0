@@ -5,6 +5,7 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DependencyService from "../../../services/dependency/DependencyService";
+import UpdateModelService from "../../../services/model/UpdateModelService";
 import DimensionsService from "../../../services/tools/DimensionsService";
 import { changeHistory } from "../../../slice/HistorySlice";
 import ActionIconButton from "../../custom/ActionIconButton/ActionIconButton";
@@ -13,6 +14,7 @@ import FactEditDialog from "./FactEditDialog";
 
 const FactView = (props) => {
   const dispatch = useDispatch();
+  const updateModelService = new UpdateModelService();
 
   const facts = useSelector((state) => state.file.value.facts);
   const attributes = useSelector((state) => state.file.value.attributes);
@@ -159,6 +161,16 @@ const FactView = (props) => {
             visible: false,
           })
         }
+        onSave={(e) => {
+          setEditDialog({
+            fact: null,
+            visible: false,
+          });
+
+          delete e.attributeName;
+
+          updateModelService.updateFact(e);
+        }}
       />
     </>
   );

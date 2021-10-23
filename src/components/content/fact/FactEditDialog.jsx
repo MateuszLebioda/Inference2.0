@@ -9,6 +9,7 @@ import FactValidator, {
 import ActionIconButton from "../../custom/ActionIconButton/ActionIconButton";
 import AttributeTypeTemplate from "../../custom/AttributeTypeTemplate/AttributeTypeTemplate";
 import FloatDropdown from "../../custom/FloatDropdown/FloatDropdown";
+import PrimaryButton from "../../custom/PrimaryButton/PrimaryButton";
 
 const FactEditDialog = (props) => {
   const factService = new FactService();
@@ -81,9 +82,40 @@ const FactEditDialog = (props) => {
     });
   };
 
+  const isFormValid = () => {
+    return fact.errors.length === 0;
+  };
+
+  const handleSave = () => {
+    let tempFact = { ...fact };
+    delete tempFact.errors;
+    delete tempFact.defaultAttributeID;
+    delete tempFact.defaultValue;
+    setFact(null);
+    props.onSave(tempFact);
+  };
+
+  const dialogFooter = () => {
+    return (
+      <div className="start-from-right ">
+        <PrimaryButton
+          label="Zapisz"
+          icon="pi pi-save"
+          disabled={
+            fact &&
+            props.fact &&
+            (factService.equals(fact, props.fact) || !isFormValid())
+          }
+          onClick={() => handleSave()}
+        />
+      </div>
+    );
+  };
+
   return (
     <Dialog
       header={`Edycja faktu`}
+      footer={dialogFooter()}
       visible={props.visible}
       style={{
         width: "50vw",
@@ -91,7 +123,7 @@ const FactEditDialog = (props) => {
       }}
       onHide={() => props.onHide()}
     >
-      <div className="space-between" style={{ marginTop: "10px" }}>
+      <div className="space-between" style={{ marginTop: "20px" }}>
         <AttributeTypeTemplate
           style={{ marginRight: "15px" }}
           option={fact && fact.type}
