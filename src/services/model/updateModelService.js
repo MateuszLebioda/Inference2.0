@@ -13,6 +13,27 @@ class UpdateModelService {
   factService = new FactService();
   attributeService = new AttributeService();
 
+  updateFact = (fact) => {
+    let attributes = [...store.getState().file.value.attributes];
+    let rules = [...store.getState().file.value.rules];
+
+    delete fact.attributeName;
+
+    let tempFacts = this.factService.replaceFact(fact, [
+      ...store.getState().file.value.facts,
+    ]);
+
+    store.dispatch(
+      updateElement({
+        attributes: attributes,
+        facts: tempFacts,
+        rules: rules,
+      })
+    );
+
+    return Promise.resolve(fact);
+  };
+
   deleteAttributes = (attribute) => {
     let rules = [...store.getState().file.value.rules];
     let facts = [...store.getState().file.value.facts];

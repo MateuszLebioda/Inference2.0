@@ -215,6 +215,7 @@ const AttributeView = () => {
             </div>
           )}
         />
+        <Column style={{ width: "0px" }} body={() => null} />
       </DataTable>
       <Dialog
         header={`${
