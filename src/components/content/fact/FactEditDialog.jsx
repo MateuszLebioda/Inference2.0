@@ -2,6 +2,7 @@
 import { Dialog } from "primereact/dialog";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { attributeType } from "../../../model/attribute/AttributeType";
 import FactService from "../../../model/fact/FactService";
 import FactValidator, {
   FACT_VALUE_ERRORS,
@@ -9,6 +10,7 @@ import FactValidator, {
 import ActionIconButton from "../../custom/ActionIconButton/ActionIconButton";
 import AttributeTypeTemplate from "../../custom/AttributeTypeTemplate/AttributeTypeTemplate";
 import FloatDropdown from "../../custom/FloatDropdown/FloatDropdown";
+import FloatInputNumber from "../../custom/FloatInputNumber/FloatInputNumber";
 import PrimaryButton from "../../custom/PrimaryButton/PrimaryButton";
 
 const FactEditDialog = (props) => {
@@ -112,6 +114,53 @@ const FactEditDialog = (props) => {
     );
   };
 
+  const getValueTemplate = () => {
+    if (!fact) {
+      return null;
+    }
+    if (fact.type === attributeType.SYMBOLIC) {
+      return (
+        <FloatDropdown
+          errors={
+            fact ? fact.errors.filter((e) => FACT_VALUE_ERRORS.includes(e)) : []
+          }
+          label="Wartość"
+          style={{ width: "100%", marginRight: "15px" }}
+          value={fact ? fact.value : ""}
+          options={getValueOptions()}
+          filter
+          optionLabel="value"
+          onChange={(e) => updateFactValue(e)}
+        />
+      );
+    } else {
+      return (
+        <FloatInputNumber
+          errors={
+            fact ? fact.errors.filter((e) => FACT_VALUE_ERRORS.includes(e)) : []
+          }
+          label="Wartość"
+          style={{ width: "100%", marginRight: "15px" }}
+          value={fact ? fact.value : ""}
+          onChange={(e) => updateFactValue(e)}
+        />
+      );
+    }
+  };
+
+  const getButtonTemplate = () => {
+    if (props.fact && fact && !factService.equals(fact, props.fact)) {
+      return (
+        <ActionIconButton
+          style={{ width: "80px", marginRight: "15px" }}
+          icon="pi-refresh"
+          tooltip="Przywróć pierwotne wartości"
+          action={() => restoreDefaultValues()}
+        />
+      );
+    }
+  };
+
   return (
     <Dialog
       header={`Edycja faktu`}
@@ -124,10 +173,6 @@ const FactEditDialog = (props) => {
       onHide={() => props.onHide()}
     >
       <div className="space-between" style={{ marginTop: "20px" }}>
-        <AttributeTypeTemplate
-          style={{ marginRight: "15px" }}
-          option={fact && fact.type}
-        />
         <FloatDropdown
           label="Nazwa atrybutu"
           style={{ width: "100%" }}
@@ -142,24 +187,9 @@ const FactEditDialog = (props) => {
         >
           =
         </div>
-        <FloatDropdown
-          errors={
-            fact ? fact.errors.filter((e) => FACT_VALUE_ERRORS.includes(e)) : []
-          }
-          label="Wartość"
-          style={{ width: "100%", marginRight: "15px" }}
-          value={fact ? fact.value : ""}
-          options={getValueOptions()}
-          filter
-          optionLabel="value"
-          onChange={(e) => updateFactValue(e)}
-        />
-        <ActionIconButton
-          style={{ width: "80px" }}
-          icon="pi-refresh"
-          tooltip="Przywróć pierwotne wartości"
-          action={() => restoreDefaultValues()}
-        />
+        {getValueTemplate()}
+        {getButtonTemplate()}
+        <AttributeTypeTemplate option={fact && fact.type} />
       </div>
     </Dialog>
   );
