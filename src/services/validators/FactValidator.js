@@ -12,7 +12,7 @@ class FactValidator extends DefaultValidator {
 
   validateAttribute = (fact) => {
     let tempErrors = [...fact.errors];
-    if (!fact.attributeID) {
+    if (fact.attributeID === null) {
       tempErrors = this.addError(tempErrors, EMPTY_FACT_ATTRIBUTE);
       if (!fact.attributeName) {
         tempErrors = this.addError(tempErrors, EMPTY_FACT_ATTRIBUTE);
