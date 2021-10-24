@@ -2,6 +2,35 @@ import store from "../../store";
 import { objectType } from "../../model/enumeration/ObjectType";
 
 class DependencyService {
+  getCompleteRules = (rules) => {
+    let attributes = [...store.getState().file.value.attributes];
+    if (!attributes) {
+      return [];
+    }
+    return rules
+      .map((r) => {
+        let tempConclusion = { ...r.conclusion };
+        tempConclusion.attributeName = attributes.find(
+          (a) => a.id === r.conclusion.attributeID
+        ).value;
+
+        let tempRule = { ...r, conclusion: tempConclusion };
+
+        tempRule.conditions = [...r.conditions].map((c) => {
+          let tempCondition = { ...c };
+          tempCondition.attributeName = attributes.find(
+            (a) => a.id === c.attributeID
+          ).value;
+          return tempCondition;
+        });
+
+        return tempRule;
+      })
+      .sort((r1, r2) =>
+        r1.conclusion.attributeName.localeCompare(r2.conclusion.attributeName)
+      );
+  };
+
   getCompleteFacts = (facts) => {
     let attributes = [...store.getState().file.value.attributes];
     if (!attributes) {
