@@ -107,18 +107,9 @@ const RuleView = (props) => {
         {rule.conditions.map((c, i) => {
           return (
             <>
-              <RuleDisplay
-                rule={c}
-                style={{
-                  height: "30px",
-                  marginTop: "auto",
-                  marginBottom: "auto",
-                }}
-              />{" "}
+              <RuleDisplay rule={c} />
               {rule.conditions.length - 1 !== i ? (
-                <AndTemplate
-                  style={{ marginLeft: "5px", marginRight: "5px" }}
-                />
+                <AndTemplate className={"mx-2"} />
               ) : null}
             </>
           );
@@ -126,8 +117,6 @@ const RuleView = (props) => {
       </div>
     );
   };
-
-  console.log(DimensionsService.getStandardTableHeight());
 
   return (
     <>
