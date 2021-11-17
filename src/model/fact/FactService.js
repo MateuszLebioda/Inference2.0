@@ -1,4 +1,4 @@
-import operator from "../operator/Operator";
+import { operator } from "../operator/Operator";
 
 class FactService {
   createEmptyFact = (id) => {

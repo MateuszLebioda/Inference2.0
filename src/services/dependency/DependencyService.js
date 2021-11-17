@@ -2,6 +2,21 @@ import store from "../../store";
 import { objectType } from "../../model/enumeration/ObjectType";
 
 class DependencyService {
+  getAttributeCollectionValues = (attributeId) => {
+    let tempAttribute = [...store.getState().file.value.attributes].find(
+      (a) => a.id === attributeId
+    );
+    return tempAttribute ? tempAttribute.collections : [];
+  };
+
+  getAttributesValue = (type) => {
+    let tempAttributes = [...store.getState().file.value.attributes];
+    if (type) {
+      tempAttributes = tempAttributes.filter((a) => a.type === type);
+    }
+    return tempAttributes;
+  };
+
   getCompleteRules = (rules) => {
     let attributes = [...store.getState().file.value.attributes];
     if (!attributes) {

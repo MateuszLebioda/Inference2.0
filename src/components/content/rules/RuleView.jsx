@@ -6,6 +6,7 @@ import { Menu } from "primereact/menu";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DependencyService from "../../../services/dependency/DependencyService";
+import UpdateModelService from "../../../services/model/UpdateModelService";
 import DimensionsService from "../../../services/tools/DimensionsService";
 import { changeHistory } from "../../../slice/HistorySlice";
 import ActionIconButton from "../../custom/ActionIconButton/ActionIconButton";
@@ -13,12 +14,19 @@ import AndTemplate from "../../custom/AndTemplate/AndTemplate";
 import IfTemplate from "../../custom/IfTemplate/IfTemplate";
 import ThenTemplate from "../../custom/ThenTemplate/ThenTemplate";
 import RuleDisplay from "./RuleDisplay";
+import RuleEditDialog from "./RuleEditDialog";
 
 const RuleView = (props) => {
   const rules = useSelector((state) => state.file.value.rules);
 
+  const updateModelService = new UpdateModelService();
+
   const [globalFilter, setGlobalFilter] = useState("");
   const [completeRule, setCompleteRule] = useState([]);
+  const [ruleEditDialog, setRuleEditDialog] = useState({
+    visible: false,
+    rule: null,
+  });
 
   useEffect(() => {
     setCompleteRule(DependencyService.getCompleteRules(rules));
@@ -50,6 +58,12 @@ const RuleView = (props) => {
       className: "p-button-success",
       tooltip: "Edytuj regułę",
       tooltipPosition: "left",
+      action: (rule) => {
+        setRuleEditDialog({
+          visible: true,
+          rule: rule,
+        });
+      },
     },
   ];
 
@@ -64,6 +78,7 @@ const RuleView = (props) => {
             onInput={(e) => setGlobalFilter(e.target.value)}
             placeholder="Wyszukaj..."
           />
+
           <ActionIconButton
             tooltip="Więcej..."
             icon="pi-ellipsis-v"
@@ -81,7 +96,7 @@ const RuleView = (props) => {
     return `calc(35px + ${buttons.length * 35}px)`;
   };
 
-  const buttonsTemplates = (fact) => {
+  const buttonsTemplates = (rule) => {
     let buttonsSection = buttons.map((b, i) => (
       <ActionIconButton
         key={`attribute-button-${i}`}
@@ -89,7 +104,7 @@ const RuleView = (props) => {
         className={b.className}
         tooltip={b.tooltip}
         tooltipPosition={b.tooltipPosition}
-        action={() => b.action(fact)}
+        action={() => b.action(rule)}
       />
     ));
     return (
@@ -149,6 +164,31 @@ const RuleView = (props) => {
         />
       </DataTable>
       <Menu model={menuItems} popup ref={menu} id="popup_menu" />
+      <RuleEditDialog
+        visible={ruleEditDialog.visible}
+        onHide={() =>
+          setRuleEditDialog({
+            rule: null,
+            visible: false,
+          })
+        }
+        rule={ruleEditDialog.rule}
+        onSave={(e) => {
+          delete e.attributeName;
+
+          if (ruleEditDialog.newFact) {
+            // updateModelService.addNewFact(e);
+          } else {
+            updateModelService.updateRule(e);
+          }
+
+          setRuleEditDialog({
+            rule: null,
+            visible: false,
+            newFact: false,
+          });
+        }}
+      />
     </>
   );
 };

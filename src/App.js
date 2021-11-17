@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import Content from "./components/content/Content";
 import "./global-style.css";
 import "./templateStyle.css";
+import "./own-flex-style.css";
 import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 const App = () => {
   const blockUI = useSelector((state) => state.block);

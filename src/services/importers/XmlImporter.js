@@ -3,10 +3,10 @@ import XMLParser from "react-xml-parser";
 import AttributeService from "../../model/attribute/AttributeService.js";
 import FactService from "../../model/fact/FactService.js";
 import { attributeType } from "../../model/attribute/AttributeType.js";
-import operator from "../../model/operator/Operator.js";
 import RuleService from "../../model/rule/RuleService.js";
 import StringComparator from "../tools/StringComparator.js";
 import AttributeCollectionService from "../../model/attribute/AttributeCollectionService.js";
+import { operator } from "../../model/operator/Operator.js";
 
 class XmlImporter extends Importer {
   parser = new XMLParser();

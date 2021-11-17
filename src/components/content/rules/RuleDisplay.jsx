@@ -1,7 +1,10 @@
 const RuleDisplay = (props) => {
   return (
-    <div style={{ ...props.style, paddingTop: "6px", cursor: "default" }}>
-      {props.rule.attributeName} = {props.rule.value}
+    <div
+      className={props.className}
+      style={{ ...props.style, paddingTop: "6px", cursor: "default" }}
+    >
+      {props.rule.attributeName} {props.rule.operator} {props.rule.value}
     </div>
   );
 };

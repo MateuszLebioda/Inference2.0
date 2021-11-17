@@ -63,6 +63,7 @@ const FloatDropdown = (props) => {
           options={props.options}
           optionLabel={props.optionLabel}
           onChange={(e) => props.onChange(e.target.value)}
+          itemTemplate={props.itemTemplate ? props.itemTemplate : null}
         />
         {props.label && <label htmlFor="inputtext">{props.label}</label>}
       </span>
