@@ -39,7 +39,7 @@ const RuleView = (props) => {
   const menu = useRef(null);
 
   useEffect(() => {
-    dispatch(changeHistory("Rules"));
+    dispatch(changeHistory("Reguły"));
   }, []);
 
   const menuItems = [

@@ -46,7 +46,7 @@ const FactView = (props) => {
   });
 
   useEffect(() => {
-    dispatch(changeHistory("Facts"));
+    dispatch(changeHistory("Fakty"));
   }, []);
 
   useEffect(() => {

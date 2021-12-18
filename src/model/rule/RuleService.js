@@ -67,7 +67,6 @@ class RuleService {
 
   createEmptyRuleToInference = (rule = null) => {
     let tempRule;
-    tempRule.activated = false;
     if (rule) {
       tempRule = this.copyRule(rule);
     } else {
@@ -78,7 +77,7 @@ class RuleService {
   };
 
   copyRule = (rule) => {
-    let tempRule = this.createEmptyRule();
+    let tempRule = { ...rule };
     tempRule.conclusion = rule.conclusion;
     tempRule.conditions = [...rule.conditions];
     return tempRule;

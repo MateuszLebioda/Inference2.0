@@ -54,7 +54,7 @@ const Navbar = (props) => {
       ],
     },
     {
-      label: "Nawiguj",
+      label: "Dane",
       icon: "pi pi-map",
       items: Labels.map((l) => {
         return {
@@ -64,14 +64,29 @@ const Navbar = (props) => {
         };
       }),
     },
+    {
+      label: "Wnioskuj",
+      icon: "pi pi-cog",
+      items: inference.map((l) => {
+        return {
+          label: l.label,
+          icon: `pi ${l.icon}`,
+          command: l.command,
+        };
+      }),
+    },
   ];
 
   const endTemplate = () => {
+    let historyElement = [...Labels, ...inference].find(
+      (l) => l.value === historySlice.value
+    );
+
     return (
       <Chip
         label={historySlice.value}
         style={{ marginRight: "15px", cursor: "default" }}
-        icon={`pi ${Labels.find((l) => l.value === historySlice.value).icon}`}
+        icon={`pi ${historyElement && historyElement.icon}`}
       />
     );
   };
@@ -87,18 +102,27 @@ export default Navbar;
 
 const Labels = [
   {
-    value: "Attributes",
+    value: "Atrybuty",
     icon: "pi pi-home",
     command: () => history.push("/attributes"),
   },
   {
-    value: "Facts",
+    value: "Fakty",
     icon: "pi pi-search",
     command: () => history.push("/facts"),
   },
   {
-    value: "Rules",
+    value: "Reguły",
     icon: "pi-question-circle",
     command: () => history.push("/rules"),
+  },
+];
+
+const inference = [
+  {
+    label: "W przód",
+    value: "Wnioskowanie w przód",
+    icon: "pi pi-step-forward",
+    command: () => history.push("/inference/forward"),
   },
 ];

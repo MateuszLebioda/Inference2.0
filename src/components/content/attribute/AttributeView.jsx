@@ -32,7 +32,7 @@ const AttributeView = () => {
   const attributeService = new AttributeService();
 
   useEffect(() => {
-    dispatch(changeHistory("Attributes"));
+    dispatch(changeHistory("Atrybuty"));
   }, []);
 
   const [filters, setFilters] = useState({
