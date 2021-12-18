@@ -3,7 +3,7 @@ import "./AttributeTypeTemplate.css";
 const AttributeTypeTemplate = (props) => {
   return (
     <span
-      className={"attribute-type-template-" + props.option}
+      className={props.className + " attribute-type-template-" + props.option}
       style={{
         marginTop: "auto",
         marginBottom: "auto",
@@ -11,9 +11,13 @@ const AttributeTypeTemplate = (props) => {
         ...props.style,
       }}
     >
-      {props.option}
+      {props.short && props.option ? props.option.slice(0, 1) : props.option}
     </span>
   );
+};
+
+AttributeTypeTemplate.defaultProps = {
+  option: "",
 };
 
 export default AttributeTypeTemplate;

@@ -1,10 +1,70 @@
+import FactService from "../fact/FactService";
+
 class RuleService {
+  factService = new FactService();
+
   createEmptyRule = (id = null) => {
     return {
       id: id,
       conclusion: null,
       conditions: [],
     };
+  };
+
+  changeConditionOperator = (rule, condition, operator) => {
+    console.log(condition);
+    console.log(operator);
+    let tempConditions = [...rule.conditions];
+    let index = tempConditions.findIndex(
+      (r) => r.attributeID === condition.attributeID
+    );
+    let tempCondition = tempConditions[index];
+    tempCondition.operator = operator;
+    tempConditions.splice(index, 1, tempCondition);
+    return { ...rule, conditions: tempConditions };
+  };
+
+  changeConditionName = (rule, condition, newCondition) => {
+    let tempConditions = [...rule.conditions];
+    let index = tempConditions.findIndex(
+      (r) => r.attributeID === condition.attributeID
+    );
+    let tempCondition = tempConditions[index];
+    tempCondition.attributeName = newCondition.value;
+    tempCondition.attributeID = newCondition.id;
+    tempCondition.type = newCondition.type;
+    tempCondition.value = null;
+    tempConditions.splice(index, 1, tempCondition);
+    return { ...rule, conditions: tempConditions };
+  };
+
+  changeConditionValue = (rule, condition, value) => {
+    let tempConditions = [...rule.conditions];
+    let index = tempConditions.findIndex(
+      (r) => r.attributeID === condition.attributeID
+    );
+    let tempCondition = tempConditions[index];
+    tempCondition.value = value;
+    tempConditions.splice(index, 1, tempCondition);
+    return { ...rule, conditions: tempConditions };
+  };
+
+  createRuleToEdit = (rule) => {
+    let tempRule = { ...rule };
+    tempRule.conclusion = this.createConclusionToEdit(rule);
+    tempRule.conditions = this.createConditionsToEdit(rule);
+
+    tempRule.errors = [];
+    tempRule.warnings = [];
+    return tempRule;
+  };
+
+  createConclusionToEdit = (rule) => {
+    return this.factService.getFactToEdit(rule.conclusion);
+  };
+
+  createConditionsToEdit = (rule) => {
+    return rule.conditions.map((c) => this.factService.getFactToEdit(c));
   };
 
   createEmptyRuleToInference = (rule = null) => {
@@ -55,7 +115,7 @@ class RuleService {
     return tempRule;
   };
 
-  handleRemoveAttributeValue = (rule, change) => {
+  handleRemoveConditionsAttributeValue = (rule, change) => {
     if (
       rule.conclusion.attributeID === change.key &&
       rule.conclusion.value === change.oldValue

@@ -42,6 +42,26 @@ class UpdateModelService {
     return Promise.resolve(fact);
   };
 
+  updateRule = (rule) => {
+    let attributes = [...store.getState().file.value.attributes];
+    let facts = [...store.getState().file.value.facts];
+
+    let tempRule = this.ruleService.replaceRule(
+      [...store.getState().file.value.rules],
+      rule
+    );
+
+    store.dispatch(
+      updateElement({
+        attributes: attributes,
+        facts: facts,
+        rules: tempRule,
+      })
+    );
+
+    return Promise.resolve(rule);
+  };
+
   updateFact = (fact) => {
     let attributes = [...store.getState().file.value.attributes];
     let rules = [...store.getState().file.value.rules];

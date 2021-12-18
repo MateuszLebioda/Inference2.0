@@ -1,5 +1,6 @@
 import DefaultValidator from "../../../services/validators/DefaultValidator";
 import { InputNumber } from "primereact/inputnumber";
+import "./FloatInputNumber.css";
 
 const FloatInputNumber = (props) => {
   const defaultValidator = new DefaultValidator();
@@ -56,8 +57,7 @@ const FloatInputNumber = (props) => {
           mode={props.mode}
           tooltip={getTooltipContent()}
           tooltipOptions={{ position: "left" }}
-          className={inputClassName()}
-          style={{ width: "100%" }}
+          className={`${inputClassName()} input-number-width`}
           id="inputtext"
           value={props.value}
           onChange={(e) => props.onChange(e.value)}
