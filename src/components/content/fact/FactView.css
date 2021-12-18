@@ -1,0 +1,29 @@
+.fact-view-type-column {
+  flex: 0 0 115px !important;
+  padding: 0.5rem !important;
+}
+
+.fact-view-attribute-column {
+  padding: 0.5rem !important;
+}
+
+.fact-view-attribute-column .p-column-header-content {
+  width: 100%;
+}
+
+.fact-view-attribute-column .p-column-header-content span {
+  width: 100%;
+}
+
+.fact-view-operator-column {
+  flex: 0 0 70px !important;
+  padding: 0.5rem !important;
+}
+
+.fact-view-value-column {
+  padding: 0.5rem !important;
+}
+
+.fact-view-buttons-column {
+  padding: 0.5rem !important;
+}

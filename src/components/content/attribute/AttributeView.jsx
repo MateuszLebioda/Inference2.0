@@ -2,10 +2,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { InputText } from "primereact/inputtext";
 import { useEffect, useRef, useState } from "react";
 import AttributeTypeTemplate from "../../custom/AttributeTypeTemplate/AttributeTypeTemplate";
-import ActionIconButton from "../../custom/ActionIconButton/ActionIconButton";
+import ActionIconButton, {
+  getButtonSectionWidth,
+} from "../../custom/ActionIconButton/ActionIconButton";
 import { removeAttribute } from "../../../slice/FileSlice";
 import { Dialog } from "primereact/dialog";
 import { attributeType } from "../../../model/attribute/AttributeType";
@@ -13,7 +14,6 @@ import AttributeCollectionView from "./AttributeCollectionView";
 import "./AttributeView.css";
 import { confirmDialog } from "primereact/confirmdialog";
 import DependencyService from "../../../services/dependency/DependencyService";
-import DimensionsService from "../../../services/tools/DimensionsService";
 import AttributeEditDialog from "./AttributeEditDialog";
 import IconLikeButton from "../../custom/IconLikeButton/IconLikeButton";
 import { DEPENDENT_ATTRIBUTE } from "../../../services/validators/AttributeValidator";
@@ -22,6 +22,9 @@ import AttributeService from "../../../model/attribute/AttributeService";
 import IdService from "../../../services/IdService";
 import { changeHistory } from "../../../slice/HistorySlice";
 import UpdateModelService from "../../../services/model/UpdateModelService";
+import { FilterMatchMode, FilterOperator } from "primereact/api";
+import AttributeTypeDropdown from "../../custom/AttributeTypeDropdown/AttributeTypeDropdown";
+import GlobalFilter from "../../custom/GlobalFilter/GlobalFIlter";
 
 const AttributeView = () => {
   const updateModelService = new UpdateModelService();
@@ -31,6 +34,15 @@ const AttributeView = () => {
   useEffect(() => {
     dispatch(changeHistory("Attributes"));
   }, []);
+
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    type: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    value: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+  });
 
   const menuItems = [
     {
@@ -56,7 +68,6 @@ const AttributeView = () => {
     };
   };
 
-  const [globalFilter, setGlobalFilter] = useState("");
   const [collectionDialog, setCollectionDialog] = useState(
     getDefaultDialogValue()
   );
@@ -142,12 +153,15 @@ const AttributeView = () => {
         >
           Lista Atrybutów
         </div>
-        <span className="p-input-icon-left">
-          <i className="pi pi-search" />
-          <InputText
-            type="search"
-            onInput={(e) => setGlobalFilter(e.target.value)}
-            placeholder="Wyszukaj..."
+        <span className="flex">
+          <GlobalFilter
+            value={filters.global.value}
+            changeValue={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                global: { ...prev.global, value: e },
+              }))
+            }
           />
           <ActionIconButton
             tooltip="Więcej..."
@@ -183,43 +197,57 @@ const AttributeView = () => {
     return tempButtons;
   };
 
-  const getButtonSectionWidth = () => {
-    return `calc(35px + ${buttons.length * 35}px)`;
+  const typeFilter = (options) => {
+    return (
+      <AttributeTypeDropdown
+        placeholder="Wybierz typ"
+        selected={options.value}
+        changeType={(e) => options.filterCallback(e)}
+      />
+    );
   };
-
-  const header = renderHeader();
 
   return (
     <>
       <DataTable
         className="row-padding"
         paginator={attributes.length > 0}
-        rows={DimensionsService.getStandardRowCount()}
+        rows={25}
         value={attributes}
-        header={header}
-        globalFilter={globalFilter}
+        header={renderHeader()}
+        scrollable
+        scrollHeight="calc(100vh - 170px)"
+        filters={filters}
       >
         <Column
-          style={{ width: "105px" }}
+          bodyClassName="attribute-view-type-column"
+          headerClassName="attribute-view-type-column"
           field="type"
           header="Typ"
+          filter
+          filterElement={typeFilter}
+          showFilterMatchModes={false}
           body={(a) => <AttributeTypeTemplate option={a.type} />}
         />
         <Column
-          style={{ width: "100%" }}
+          bodyClassName="attribute-view-name-column"
+          headerClassName="attribute-view-name-column"
           field="value"
           header="Nazwa"
+          filter
           bodyStyle={{ cursor: "default" }}
         />
         <Column
-          style={{ width: getButtonSectionWidth() }}
+          bodyClassName="attribute-view-name-column"
+          headerClassName="attribute-view-name-column"
+          bodyStyle={{ flex: `0 0 ${getButtonSectionWidth(buttons)}` }}
+          headerStyle={{ flex: `0 0 ${getButtonSectionWidth(buttons)}` }}
           body={(e) => (
             <div className="start-from-right" start-from-right>
               {renderButtonSection(e)}
             </div>
           )}
         />
-        <Column style={{ width: "0px" }} body={() => null} />
       </DataTable>
       <Dialog
         header={`${

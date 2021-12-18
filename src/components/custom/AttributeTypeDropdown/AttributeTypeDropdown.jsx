@@ -12,9 +12,12 @@ const AttributeTypeDropdown = (props) => {
           value={props.selected}
           options={[attributeType.CONTINOUS, attributeType.SYMBOLIC]}
           onChange={(e) => props.changeType(e.value)}
-          valueTemplate={<AttributeTypeTemplate option={props.selected} />}
+          valueTemplate={
+            props.selected && <AttributeTypeTemplate option={props.selected} />
+          }
           itemTemplate={(option) => <AttributeTypeTemplate option={option} />}
           className="p-column-filter"
+          placeholder={props.placeholder}
         />
         <label htmlFor="dropdown">{props.label}</label>
       </span>

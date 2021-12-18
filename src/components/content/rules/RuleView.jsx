@@ -9,12 +9,15 @@ import DependencyService from "../../../services/dependency/DependencyService";
 import UpdateModelService from "../../../services/model/UpdateModelService";
 import DimensionsService from "../../../services/tools/DimensionsService";
 import { changeHistory } from "../../../slice/HistorySlice";
-import ActionIconButton from "../../custom/ActionIconButton/ActionIconButton";
+import ActionIconButton, {
+  getButtonSectionWidth,
+} from "../../custom/ActionIconButton/ActionIconButton";
 import AndTemplate from "../../custom/AndTemplate/AndTemplate";
 import IfTemplate from "../../custom/IfTemplate/IfTemplate";
 import ThenTemplate from "../../custom/ThenTemplate/ThenTemplate";
 import RuleDisplay from "./RuleDisplay";
 import RuleEditDialog from "./RuleEditDialog";
+import "./RuleView.css";
 
 const RuleView = (props) => {
   const rules = useSelector((state) => state.file.value.rules);
@@ -90,12 +93,6 @@ const RuleView = (props) => {
     );
   };
 
-  const header = renderHeader();
-
-  const getButtonSectionWidth = () => {
-    return `calc(35px + ${buttons.length * 35}px)`;
-  };
-
   const buttonsTemplates = (rule) => {
     let buttonsSection = buttons.map((b, i) => (
       <ActionIconButton
@@ -116,9 +113,7 @@ const RuleView = (props) => {
 
   const getConditionTemplate = (rule) => {
     return (
-      <div
-        style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
-      >
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
         {rule.conditions.map((c, i) => {
           return (
             <>
@@ -133,6 +128,8 @@ const RuleView = (props) => {
     );
   };
 
+  console.log(completeRule);
+
   return (
     <>
       <DataTable
@@ -142,24 +139,37 @@ const RuleView = (props) => {
         paginator={rules.length > 0}
         rows={DimensionsService.getStandardRowCount()}
         value={completeRule}
-        header={header}
+        header={renderHeader()}
         globalFilter={globalFilter}
       >
-        <Column style={{ width: "40px" }} body={(a) => <IfTemplate />} />
+        <Column
+          bodyClassName="rule-view-if-column"
+          headerClassName="rule-view-if-column"
+          body={(a) => <IfTemplate />}
+        />
 
         <Column
-          style={{ width: "100%" }}
+          bodyClassName="rule-view-conditions-column"
+          headerClassName="rule-view-conditions-column"
           header="Warunki"
           body={(a) => getConditionTemplate(a)}
         />
-        <Column style={{ width: "60px" }} body={(a) => <ThenTemplate />} />
         <Column
-          style={{ width: "300px" }}
+          bodyClassName="rule-view-then-column"
+          headerClassName="rule-view-then-column"
+          body={(a) => <ThenTemplate />}
+        />
+        <Column
+          bodyClassName="rule-view-conclusion-column"
+          headerClassName="rule-view-conclusion-column"
           header="Konkluzja"
           body={(a) => <RuleDisplay rule={a.conclusion} />}
         />
         <Column
-          style={{ width: getButtonSectionWidth() }}
+          bodyClassName="rule-view-buttons-column"
+          headerClassName="rule-view-buttons-column"
+          bodyStyle={{ flex: `0 0 ${getButtonSectionWidth(buttons)}` }}
+          headerStyle={{ flex: `0 0 ${getButtonSectionWidth(buttons)}` }}
           body={(f) => buttonsTemplates(f)}
         />
       </DataTable>

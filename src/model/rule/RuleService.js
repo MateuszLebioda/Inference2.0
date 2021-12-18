@@ -12,8 +12,6 @@ class RuleService {
   };
 
   changeConditionOperator = (rule, condition, operator) => {
-    console.log(condition);
-    console.log(operator);
     let tempConditions = [...rule.conditions];
     let index = tempConditions.findIndex(
       (r) => r.attributeID === condition.attributeID

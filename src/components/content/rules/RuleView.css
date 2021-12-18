@@ -1,0 +1,26 @@
+.rule-view-if-column {
+  flex: 0 0 30px !important;
+  padding: 0.5rem !important;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rule-view-conditions-column {
+  padding: 0.5rem !important;
+}
+
+.rule-view-then-column {
+  flex: 0 0 30px !important;
+  padding: 0.5rem !important;
+}
+
+.rule-view-conclusion-column {
+  flex: 0 0 300px !important;
+  padding: 0.5rem !important;
+}
+
+.rule-view-buttons-column {
+  padding: 0.5rem !important;
+}

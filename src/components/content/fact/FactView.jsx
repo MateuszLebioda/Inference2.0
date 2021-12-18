@@ -2,17 +2,21 @@
 import { Column } from "primereact/column";
 import { confirmDialog } from "primereact/confirmdialog";
 import { DataTable } from "primereact/datatable";
-import { InputText } from "primereact/inputtext";
 import { Menu } from "primereact/menu";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DependencyService from "../../../services/dependency/DependencyService";
 import UpdateModelService from "../../../services/model/UpdateModelService";
-import DimensionsService from "../../../services/tools/DimensionsService";
 import { changeHistory } from "../../../slice/HistorySlice";
-import ActionIconButton from "../../custom/ActionIconButton/ActionIconButton";
+import ActionIconButton, {
+  getButtonSectionWidth,
+} from "../../custom/ActionIconButton/ActionIconButton";
 import AttributeTypeTemplate from "../../custom/AttributeTypeTemplate/AttributeTypeTemplate";
 import FactEditDialog from "./FactEditDialog";
+import "./FactView.css";
+import { FilterMatchMode, FilterOperator } from "primereact/api";
+import AttributeTypeDropdown from "../../custom/AttributeTypeDropdown/AttributeTypeDropdown";
+import GlobalFilter from "../../custom/GlobalFilter/GlobalFIlter";
 
 const FactView = (props) => {
   const dispatch = useDispatch();
@@ -23,10 +27,22 @@ const FactView = (props) => {
   const attributes = useSelector((state) => state.file.value.attributes);
 
   const [completeFacts, setCompleteFacts] = useState([]);
-  const [globalFilter, setGlobalFilter] = useState("");
   const [editDialog, setEditDialog] = useState({
     fact: null,
     visible: false,
+  });
+
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    type: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    attributeName: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    value: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
   });
 
   useEffect(() => {
@@ -88,20 +104,19 @@ const FactView = (props) => {
     },
   ];
 
-  const getButtonSectionWidth = () => {
-    return `calc(35px + ${buttons.length * 35}px)`;
-  };
-
   const renderHeader = () => {
     return (
       <div className="space-between" style={{ fontSize: "17px" }}>
         <div style={{ margin: "auto" }}>Lista Faktów</div>
-        <span className="p-input-icon-left">
-          <i className="pi pi-search" />
-          <InputText
-            type="search"
-            onInput={(e) => setGlobalFilter(e.target.value)}
-            placeholder="Wyszukaj..."
+        <div className="flex">
+          <GlobalFilter
+            value={filters.global.value}
+            changeValue={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                global: { ...prev.global, value: e },
+              }))
+            }
           />
           <ActionIconButton
             tooltip="Więcej..."
@@ -109,7 +124,7 @@ const FactView = (props) => {
             className="p-button-secondary"
             action={(event) => menu.current.toggle(event)}
           />
-        </span>
+        </div>
       </div>
     );
   };
@@ -132,13 +147,17 @@ const FactView = (props) => {
     );
   };
 
-  const header = renderHeader();
-
   const getAttributeTemplate = (fact) => {
+    return <div className="pl-1 w-full text-right">{fact.attributeName}</div>;
+  };
+
+  const typeFilter = (options) => {
     return (
-      <div style={{ paddingLeft: "10px", textAlign: "right" }}>
-        {fact.attributeName}
-      </div>
+      <AttributeTypeDropdown
+        placeholder="Wybierz typ"
+        selected={options.value}
+        changeType={(e) => options.filterCallback(e)}
+      />
     );
   };
 
@@ -147,44 +166,51 @@ const FactView = (props) => {
       <DataTable
         className="row-padding"
         paginator={facts.length > 0}
-        rows={DimensionsService.getStandardRowCount()}
+        rows={25}
         value={completeFacts}
-        header={header}
-        globalFilter={globalFilter}
+        header={renderHeader()}
+        filters={filters}
+        scrollable
+        scrollHeight="calc(100vh - 170px)"
       >
         <Column
-          style={{ width: "105px" }}
+          bodyClassName="fact-view-type-column"
+          headerClassName="fact-view-type-column"
           field="type"
           header="Typ"
+          filter
+          filterElement={typeFilter}
+          showFilterMatchModes={false}
           body={(a) => <AttributeTypeTemplate option={a.type} />}
         />
         <Column
-          style={{ width: "100%", textAlign: "right" }}
+          bodyClassName="fact-view-attribute- cursor-default"
+          headerClassName="fact-view-attribute-column"
           field="attributeName"
-          header="Atrybut"
+          header={() => <div className="w-full text-right">Atrybut</div>}
+          filter
           body={(e) => getAttributeTemplate(e)}
-          bodyStyle={{ cursor: "default" }}
         />
         <Column
-          style={{ width: "175px", textAlign: "center" }}
+          bodyClassName="fact-view-operator-column cursor-default"
+          headerClassName="fact-view-operator-column"
           field="operator"
           header="Operator"
-          bodyStyle={{ cursor: "default", textAlign: "center" }}
+          body={(e) => <div className="mx-auto">{e.operator}</div>}
         />
         <Column
-          style={{ width: "100%" }}
+          bodyClassName="fact-view-value-column cursor-default"
+          headerClassName="fact-view-value-column"
           field="value"
           header="Wartość"
-          bodyStyle={{ cursor: "default" }}
+          filter
         />
         <Column
-          style={{ width: getButtonSectionWidth() }}
+          bodyClassName="fact-view-value-column"
+          headerClassName="fact-view-value-column"
+          bodyStyle={{ flex: `0 0 ${getButtonSectionWidth(buttons)}` }}
+          headerStyle={{ flex: `0 0 ${getButtonSectionWidth(buttons)}` }}
           body={(f) => buttonsTemplates(f)}
-        />
-        <Column
-          style={{ width: "0px" }}
-          field="attributeName"
-          body={() => null}
         />
       </DataTable>
       <FactEditDialog

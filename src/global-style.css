@@ -27,3 +27,6 @@
   color: #28a450 !important;
   font-weight: 500;
 }
+.p-submenu-list {
+  z-index: 10 !important;
+}
