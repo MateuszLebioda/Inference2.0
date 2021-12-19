@@ -12,7 +12,6 @@ class UpdateModelService {
   attributeCollectionService = new AttributeCollectionService();
   ruleService = new RuleService();
   factService = new FactService();
-  attributeService = new AttributeService();
 
   deleteFact = (fact) => {
     store.dispatch(

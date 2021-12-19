@@ -9,9 +9,12 @@ import "./global-style.css";
 import "./templateStyle.css";
 import "./own-flex-style.css";
 import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
+import { addLocale, locale } from "primereact/api";
+import { PL_LOCALE } from "./locale";
 const App = () => {
   const blockUI = useSelector((state) => state.block);
-
+  addLocale("pl", PL_LOCALE);
+  locale("pl");
   return (
     <>
       <BlockUI
@@ -25,11 +28,7 @@ const App = () => {
         }
       />
       <Navbar />
-      {/* <TabView>
-        <TabPanel header={file.value.name}> */}
       <Content />
-      {/* </TabPanel>
-      </TabView> */}
     </>
   );
 };

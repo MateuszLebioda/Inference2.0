@@ -18,4 +18,8 @@ ActionIconButton.defaultProps = {
   disabled: false,
 };
 
+export const getButtonSectionWidth = (buttons) => {
+  return `calc(35px + ${buttons.length * 35}px)`;
+};
+
 export default ActionIconButton;

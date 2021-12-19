@@ -12,8 +12,6 @@ class RuleService {
   };
 
   changeConditionOperator = (rule, condition, operator) => {
-    console.log(condition);
-    console.log(operator);
     let tempConditions = [...rule.conditions];
     let index = tempConditions.findIndex(
       (r) => r.attributeID === condition.attributeID
@@ -69,7 +67,6 @@ class RuleService {
 
   createEmptyRuleToInference = (rule = null) => {
     let tempRule;
-    tempRule.activated = false;
     if (rule) {
       tempRule = this.copyRule(rule);
     } else {
@@ -80,7 +77,7 @@ class RuleService {
   };
 
   copyRule = (rule) => {
-    let tempRule = this.createEmptyRule();
+    let tempRule = { ...rule };
     tempRule.conclusion = rule.conclusion;
     tempRule.conditions = [...rule.conditions];
     return tempRule;

@@ -259,6 +259,7 @@ const AttributeEditDialog = (props) => {
       footer={dialogFooter()}
       visible={props.visible}
       style={{
+        minWidth: "400px",
         width: "50vw",
         height: `${
           tempAttribute && tempAttribute.type === attributeType.SYMBOLIC
