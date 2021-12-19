@@ -43,6 +43,7 @@ class FactService {
     let tempFact = { ...fact };
     tempFact.defaultValue = fact.value;
     tempFact.defaultAttributeID = fact.attributeID;
+    tempFact.defaultType = fact.type;
 
     tempFact.errors = [];
     tempFact.warnings = [];

@@ -14,6 +14,8 @@ import AttributeTypeTemplate from "../../custom/AttributeTypeTemplate/AttributeT
 import FloatDropdown from "../../custom/FloatDropdown/FloatDropdown";
 import FloatInputNumber from "../../custom/FloatInputNumber/FloatInputNumber";
 import PrimaryButton from "../../custom/PrimaryButton/PrimaryButton";
+import RuleAttributeDropdown from "../../custom/RuleAttributeDropdown/RuleAttributeDropdown";
+import RuleValueDropdown from "../../custom/RuleValueDropdown/RuleValueDropdown";
 
 const FactEditDialog = (props) => {
   const factService = new FactService();
@@ -39,34 +41,24 @@ const FactEditDialog = (props) => {
 
   const getNameOptions = () => {
     if (fact) {
-      return attributes.filter((a) => a.type === fact.type);
-    }
-    return [];
-  };
-
-  const getValueOptions = () => {
-    if (fact) {
-      let attribute = attributes.find((a) => a.id === fact.attributeID);
-      if (attribute) {
-        return attribute.collections;
-      }
+      return attributes;
     }
     return [];
   };
 
   const updateFactAttribute = (value) => {
-    let originalAttribute = getNameOptions().find((a) => a.value === value);
+    let originalAttribute = getNameOptions().find((a) => a.id === value.id);
     let tempFact = {
       ...fact,
       value: null,
       attributeName: originalAttribute.value,
       attributeID: originalAttribute.id,
+      type: originalAttribute.type,
     };
-    let errors = validator.validateEmptyValue(tempFact);
-    errors = validator.validateAttribute(tempFact);
+    tempFact.errors = validator.validateEmptyValue(tempFact);
+    tempFact.errors = validator.validateAttribute(tempFact);
     setFact({
       ...tempFact,
-      errors: errors,
     });
   };
 
@@ -82,23 +74,6 @@ const FactEditDialog = (props) => {
     });
   };
 
-  const updateFactType = (type) => {
-    let tempFact = {
-      ...fact,
-      type: type,
-      attributeID: null,
-      attributeName: null,
-      value: null,
-    };
-
-    tempFact.errors = validator.validateEmptyValue(tempFact);
-    tempFact.errors = validator.validateAttribute(tempFact);
-
-    setFact({
-      ...tempFact,
-    });
-  };
-
   const restoreDefaultValues = () => {
     let originalAttribute = getNameOptions().find(
       (a) => a.id === fact.defaultAttributeID
@@ -108,12 +83,13 @@ const FactEditDialog = (props) => {
       value: fact.defaultValue,
       attributeName: originalAttribute.value,
       attributeID: fact.defaultAttributeID,
+      type: fact.defaultType,
       errors: [],
     });
   };
 
   const isFormValid = () => {
-    return fact.errors.length === 0;
+    return fact && fact.errors.length === 0;
   };
 
   const handleSave = () => {
@@ -127,54 +103,21 @@ const FactEditDialog = (props) => {
   };
 
   const dialogFooter = () => {
+    let isDisabled =
+      (fact != null &&
+        props.fact != null &&
+        factService.equals(fact, props.fact)) ||
+      !isFormValid();
     return (
       <div className="start-from-right ">
         <PrimaryButton
           label="Zapisz"
           icon="pi pi-save"
-          disabled={
-            fact &&
-            props.fact &&
-            (factService.equals(fact, props.fact) || !isFormValid())
-          }
+          disabled={isDisabled}
           onClick={() => handleSave()}
         />
       </div>
     );
-  };
-
-  const getValueTemplate = () => {
-    if (!fact) {
-      return null;
-    }
-    if (fact.type === attributeType.SYMBOLIC) {
-      return (
-        <FloatDropdown
-          errors={
-            fact ? fact.errors.filter((e) => FACT_VALUE_ERRORS.includes(e)) : []
-          }
-          label="Wartość"
-          style={{ width: "100%", marginRight: "15px" }}
-          value={fact ? fact.value : ""}
-          options={getValueOptions()}
-          filter
-          optionLabel="value"
-          onChange={(e) => updateFactValue(e)}
-        />
-      );
-    } else {
-      return (
-        <FloatInputNumber
-          errors={
-            fact ? fact.errors.filter((e) => FACT_VALUE_ERRORS.includes(e)) : []
-          }
-          label="Wartość"
-          style={{ width: "100%", marginRight: "15px" }}
-          value={fact ? fact.value : ""}
-          onChange={(e) => updateFactValue(e)}
-        />
-      );
-    }
   };
 
   const getButtonTemplate = () => {
@@ -195,19 +138,7 @@ const FactEditDialog = (props) => {
     }
   };
 
-  const getTypeTemplate = () => {
-    if (props.newFact) {
-      return (
-        <AttributeTypeDropdown
-          style={{ width: "150px" }}
-          selected={fact && fact.type}
-          changeType={(e) => updateFactType(e)}
-        />
-      );
-    } else {
-      return <AttributeTypeTemplate option={fact && fact.type} />;
-    }
-  };
+  console.log(fact);
 
   return (
     <Dialog
@@ -221,28 +152,42 @@ const FactEditDialog = (props) => {
       onHide={() => props.onHide()}
     >
       <div className="space-between" style={{ marginTop: "20px" }}>
-        <FloatDropdown
+        {fact && fact.attributeID && (
+          <AttributeTypeTemplate
+            option={fact && fact.type}
+            short
+            className="mr-2"
+          />
+        )}
+        <RuleAttributeDropdown
+          noHeader
+          value={fact && fact.attributeName}
+          className="w-full"
           errors={
-            fact
-              ? fact.errors.filter((e) => FACT_ATTRIBUTES_ERRORS.includes(e))
-              : []
+            fact &&
+            fact.errors.filter((e) => FACT_ATTRIBUTES_ERRORS.includes(e))
           }
-          label="Nazwa atrybutu"
-          style={{ width: "100%" }}
-          value={fact ? fact.attributeName : ""}
-          options={getNameOptions()}
-          filter
-          optionLabel="value"
-          onChange={(e) => updateFactAttribute(e)}
+          onChange={(e) => {
+            updateFactAttribute(e);
+          }}
         />
         <div
           style={{ margin: "auto", paddingRight: "15px", paddingLeft: "15px" }}
         >
           =
         </div>
-        {getValueTemplate()}
+        <RuleValueDropdown
+          type={fact && fact.type}
+          errors={
+            fact && fact.errors.filter((e) => FACT_VALUE_ERRORS.includes(e))
+          }
+          noHeader
+          value={fact && fact.value}
+          className="w-full"
+          attributeID={fact && fact.attributeID}
+          onChange={(e) => updateFactValue(e)}
+        />
         {getButtonTemplate()}
-        {getTypeTemplate()}
       </div>
     </Dialog>
   );
