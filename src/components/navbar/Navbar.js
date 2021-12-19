@@ -11,9 +11,11 @@ import {
 import { updateElement } from "../../slice/FileSlice";
 import history from "../../services/history";
 import { Chip } from "primereact/chip";
+import { saveAs } from "file-saver";
 
 const Navbar = (props) => {
   const historySlice = useSelector((state) => state.history);
+  const file = useSelector((state) => state.file.value);
   const importerFactory = ImporterFactory;
   const dispatch = useDispatch();
 
@@ -21,8 +23,11 @@ const Navbar = (props) => {
     dispatch(blockUiWithMessage(START_IMPORT));
     let reader = new FileReader();
     reader.onload = (file) => {
+      let type = file.target.result.includes('"importType": "Inference2.0"')
+        ? ".json"
+        : ".xml";
       let data = file.target.result;
-      const importer = importerFactory.getImporter(".xml");
+      const importer = importerFactory.getImporter(type);
 
       importer.importFromFile(data).then((r) => {
         dispatch(updateElement(r));
@@ -32,13 +37,23 @@ const Navbar = (props) => {
     reader.readAsText(e.files[0], "UTF-8");
   };
 
+  const save = () => {
+    const blob = new Blob(
+      [JSON.stringify({ ...file, importType: "Inference2.0" }, null, 1)],
+      {
+        type: "application/json",
+      }
+    );
+    saveAs(blob, "Inference.json");
+  };
+
   const items = [
     {
       label: "Plik",
       icon: "pi pi-fw pi-file",
       items: [
         {
-          icon: "pi pi-fw pi-plus",
+          icon: "pi pi-download",
           template: (
             <div className="file-upload-hover">
               <FileUpload
@@ -50,6 +65,11 @@ const Navbar = (props) => {
               />
             </div>
           ),
+        },
+        {
+          icon: "pi pi-save",
+          label: "Zapisz",
+          command: () => save(),
         },
       ],
     },

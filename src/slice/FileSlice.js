@@ -34,6 +34,8 @@ export const fileSlice = createSlice({
       newFile.attributes = action.payload.attributes;
       newFile.rules = action.payload.rules;
       newFile.facts = action.payload.facts;
+      action.payload.metrics && (newFile.metrics = action.payload.metrics);
+      action.payload.name && (newFile.name = action.payload.name);
       state.value = newFile;
     },
 
