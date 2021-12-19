@@ -15,6 +15,20 @@ export const fileSlice = createSlice({
     value: getEmptyFile(),
   },
   reducers: {
+    addMetrics: (state, action) => {
+      const newFile = { ...state.value };
+      newFile.metrics = [...state.value.metrics, action.payload.metrics];
+      state.value = newFile;
+    },
+
+    removeMetrics: (state, action) => {
+      const newFile = { ...state.value };
+      newFile.metrics = [...state.value.metrics].filter(
+        (m) => m.id !== action.payload.id
+      );
+      state.value = newFile;
+    },
+
     updateElement: (state, action) => {
       const newFile = { ...state.value };
       newFile.attributes = action.payload.attributes;
@@ -31,5 +45,6 @@ export const fileSlice = createSlice({
   },
 });
 
-export const { updateElement, removeAttribute } = fileSlice.actions;
+export const { updateElement, removeAttribute, removeMetrics, addMetrics } =
+  fileSlice.actions;
 export default fileSlice.reducer;

@@ -8,6 +8,7 @@ const MenuButton = (props) => {
   return (
     <>
       <ActionIconButton
+        tooltipPosition={props.tooltipPosition}
         tooltip="Więcej..."
         icon="pi-ellipsis-v"
         className="p-button-secondary py-0"

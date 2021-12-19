@@ -7,7 +7,6 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DependencyService from "../../../services/dependency/DependencyService";
 import UpdateModelService from "../../../services/model/UpdateModelService";
-import DimensionsService from "../../../services/tools/DimensionsService";
 import { changeHistory } from "../../../slice/HistorySlice";
 import ActionIconButton, {
   getButtonSectionWidth,
@@ -128,16 +127,14 @@ const RuleView = (props) => {
     );
   };
 
-  console.log(completeRule);
-
   return (
     <>
       <DataTable
         scrollable
-        scrollHeight={`${DimensionsService.getStandardTableHeight()}px`}
+        scrollHeight="calc(100vh - 170px)"
         className="row-padding"
         paginator={rules.length > 0}
-        rows={DimensionsService.getStandardRowCount()}
+        rows={25}
         value={completeRule}
         header={renderHeader()}
         globalFilter={globalFilter}

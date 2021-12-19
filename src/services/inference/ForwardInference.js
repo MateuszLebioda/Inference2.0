@@ -3,57 +3,46 @@ import FactService from "../../model/fact/FactService";
 import RuleService from "../../model/rule/RuleService";
 import DefaultInference from "./DefaultInference";
 import store from "../../store";
+import { Metrics } from "../../model/metrics/Metrics";
 
 class ForwardInference extends DefaultInference {
   ruleService = new RuleService();
   factService = new FactService();
 
-  metrics = this.getMetricsObject;
+  metrics = new Metrics();
 
-  inference = (rules = null, facts = null) => {
-    this.metrics = this.getMetricsObject;
+  inference = (metric, facts = null, rules = null) => {
+    this.metrics = metric;
     let inferenceRules = this.ruleService.copyRulesAndMarkAsNotActive(
       rules ? rules : [...store.getState().file.value.rules]
     );
-
-    this.metrics = {
-      ...this.metrics,
-      oldFacts: facts ? [...facts] : [...store.getState().file.value.facts],
-    };
+    this.metrics.setOldFacts(
+      facts ? [...facts] : [...store.getState().file.value.facts]
+    );
+    this.metrics.startCountingTime();
 
     let newFact;
-    this.metrics = { ...this.metrics, timeStart: performance.now() };
 
     while (
       (newFact = this.findNewFact(this.metrics.getAllFacts(), inferenceRules))
     ) {
-      this.metrics = {
-        ...this.metrics,
-        iterations: this.metrics.iterations + 1,
-      };
-
       if (
         !this.metrics
           .getAllFacts()
           .some((nf) => this.factService.equals(nf, newFact))
       ) {
-        this.metrics = {
-          ...this.metrics,
-          newFacts: [...this.metrics.newFacts, ...[newFact]],
-        };
+        this.metrics.addNewFact(newFact);
       }
     }
 
-    this.metrics = { ...this.metrics, timeEnd: performance.now() };
+    this.metrics.endCountingTime();
     return this.metrics;
   };
 
   findNewFact = (facts, rules) => {
+    this.metrics.incrementIterations();
     for (let r of rules) {
-      this.metrics = {
-        ...this.metrics,
-        checkedRules: this.metrics.checkedRules + 1,
-      };
+      this.metrics.incrementCheckedRules();
       if (!r.activated) {
         let isRequirementsMet = true;
         for (let c of r.conditions) {
@@ -70,10 +59,7 @@ class ForwardInference extends DefaultInference {
           }
         }
         if (isRequirementsMet) {
-          this.metrics = {
-            ...this.metrics,
-            activatedRules: [...this.metrics.activatedRules, ...[r]],
-          };
+          this.metrics.addActivatedRule(r);
           r.activated = true;
           return r.conclusion;
         }

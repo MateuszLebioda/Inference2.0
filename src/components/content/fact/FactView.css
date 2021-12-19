@@ -1,3 +1,8 @@
+.fact-view-select-column {
+  flex: 0 0 3rem !important;
+  padding: 0.5rem !important;
+}
+
 .fact-view-type-column {
   flex: 0 0 115px !important;
   padding: 0.5rem !important;

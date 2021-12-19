@@ -18,6 +18,7 @@ const AttributeTypeTemplate = (props) => {
 
 AttributeTypeTemplate.defaultProps = {
   option: "",
+  short: false,
 };
 
 export default AttributeTypeTemplate;
