@@ -36,7 +36,7 @@ class ForwardInference extends DefaultInference {
     }
 
     this.metrics.endCountingTime();
-    return this.metrics;
+    return Promise.resolve(this.metrics);
   };
 
   findNewFact = (facts, rules) => {

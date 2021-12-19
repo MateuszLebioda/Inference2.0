@@ -9,6 +9,10 @@ const store = configureStore({
     block: blockSlice,
     history: historySlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default store;

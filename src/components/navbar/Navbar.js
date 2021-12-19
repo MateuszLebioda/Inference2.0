@@ -75,10 +75,21 @@ const Navbar = (props) => {
         };
       }),
     },
+    {
+      label: "Metryki",
+      icon: "pi pi-book",
+      items: metrics.map((l) => {
+        return {
+          label: l.label,
+          icon: `pi ${l.icon}`,
+          command: l.command,
+        };
+      }),
+    },
   ];
 
   const endTemplate = () => {
-    let historyElement = [...Labels, ...inference].find(
+    let historyElement = [...Labels, ...inference, ...metrics].find(
       (l) => l.value === historySlice.value
     );
 
@@ -124,5 +135,14 @@ const inference = [
     value: "Wnioskowanie w przód",
     icon: "pi pi-step-forward",
     command: () => history.push("/inference/forward"),
+  },
+];
+
+const metrics = [
+  {
+    label: "Przeglądaj",
+    value: "Lista metryk",
+    icon: "pi pi-list",
+    command: () => history.push("/metrics/preview"),
   },
 ];

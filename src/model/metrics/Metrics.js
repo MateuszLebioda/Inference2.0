@@ -1,6 +1,7 @@
 import IdService from "../../services/IdService";
 import { RandomRGBColor } from "../../services/tools/RandomRGBColor";
 import store from "../../store";
+import moment from "moment";
 
 export class Metrics {
   constructor(name, color) {
@@ -50,12 +51,16 @@ export class Metrics {
   endCountingTime = () => {
     this.timeEnd = performance.now();
   };
+  parseDate = (format = null) => {
+    return moment(this.date).format(format ? format : "YYYY-MM-DD HH:MM:SS");
+  };
 
   toPojo = () => {
     return {
       id: this.id,
       name: this.name,
-      date: this.date,
+      color: this.color,
+      date: this.parseDate(),
       totalTime: this.getTotalTime(),
       totalTimeSecond: this.getTotalTimeSecond(),
       iterations: this.iterations,

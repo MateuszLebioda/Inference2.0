@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { BlockUI } from "primereact/blockui";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -17,6 +18,7 @@ const ForwardInferenceView = (props) => {
   const facts = useSelector((state) => state.file.value.facts);
   const forwardInference = new ForwardInference();
   const [selectedFacts, setSelectedFacts] = useState([]);
+  const [block, setBlock] = useState(false);
   const [name, setName] = useState("");
   const [allFacts, setAllFacts] = useState(true);
   const [color, setColor] = useState({
@@ -33,7 +35,16 @@ const ForwardInferenceView = (props) => {
   }
 
   return (
-    <>
+    <BlockUI
+      blocked={block}
+      fullScreen
+      template={
+        <div>
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: "3em" }} />
+          Wnioskuję ...
+        </div>
+      }
+    >
       <div className="p-formgroup-inline m-3">
         <div className="flex w-full mt-5">
           <h5 className="text-xl my-auto w-5rem">Nazwa:</h5>
@@ -49,7 +60,7 @@ const ForwardInferenceView = (props) => {
           random={color.random}
           color={color.value}
           setColor={(e) => {
-            setColor((prev) => ({ ...prev, color: e }));
+            setColor((prev) => ({ ...prev, value: e }));
           }}
           setRandom={(e) => {
             setColor((prev) => ({
@@ -70,16 +81,20 @@ const ForwardInferenceView = (props) => {
             label="Rozpocznij"
             icon="pi pi-cog"
             onClick={() => {
+              setBlock(true);
               let metrics = new Metrics(name, color.value);
-              let newMetrics = forwardInference
+              forwardInference
                 .inference(metrics, !allFacts && selectedFacts)
-                .toPojo();
-              dispatch(addMetrics({ metrics: newMetrics }));
+                .then((r) => {
+                  let newMetrics = r.toPojo();
+                  dispatch(addMetrics({ metrics: newMetrics }));
+                  setBlock(false);
+                });
             }}
           />
         </div>
       </div>
-    </>
+    </BlockUI>
   );
 };
 

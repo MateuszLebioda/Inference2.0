@@ -9,10 +9,7 @@ import FactValidator, {
   FACT_VALUE_ERRORS,
 } from "../../../services/validators/FactValidator";
 import ActionIconButton from "../../custom/ActionIconButton/ActionIconButton";
-import AttributeTypeDropdown from "../../custom/AttributeTypeDropdown/AttributeTypeDropdown";
 import AttributeTypeTemplate from "../../custom/AttributeTypeTemplate/AttributeTypeTemplate";
-import FloatDropdown from "../../custom/FloatDropdown/FloatDropdown";
-import FloatInputNumber from "../../custom/FloatInputNumber/FloatInputNumber";
 import PrimaryButton from "../../custom/PrimaryButton/PrimaryButton";
 import RuleAttributeDropdown from "../../custom/RuleAttributeDropdown/RuleAttributeDropdown";
 import RuleValueDropdown from "../../custom/RuleValueDropdown/RuleValueDropdown";
@@ -137,8 +134,6 @@ const FactEditDialog = (props) => {
       );
     }
   };
-
-  console.log(fact);
 
   return (
     <Dialog
