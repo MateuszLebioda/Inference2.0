@@ -1,6 +1,10 @@
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { useSelector } from "react-redux";
+import {
+  getButtonSectionWidth,
+  renderButtons,
+} from "../../custom/ActionIconButton/ActionIconButton";
 import "./MetricsTable.css";
 
 const MetricsTable = (props) => {
@@ -11,8 +15,6 @@ const MetricsTable = (props) => {
       paginator={metics.length > 0}
       rows={25}
       value={metics}
-      //   header={renderHeader()}
-      //   filters={filters}
       scrollable
       scrollHeight="calc(100vh - 170px)"
       selectionMode={props.selection && "checkbox"}
@@ -24,13 +26,6 @@ const MetricsTable = (props) => {
         props.onSelect(tempFact);
       }}
     >
-      {/* {props.selection && (
-        <Column
-          selectionMode="multiple"
-          bodyClassName="fact-view-select-column"
-          headerClassName="fact-view-select-column"
-        />
-      )} */}
       <Column
         bodyClassName="metrics-view-date-column"
         headerClassName="metrics-view-date-column"
@@ -73,6 +68,7 @@ const MetricsTable = (props) => {
         field="totalTime"
         header="Czas [ms]"
       />
+
       <Column
         bodyClassName="metrics-view-date-column"
         headerClassName="metrics-view-date-column"
@@ -84,6 +80,13 @@ const MetricsTable = (props) => {
               backgroundColor: `rgb(${m.color.r},${m.color.g},${m.color.b})`,
             }}
           ></div>
+        )}
+      />
+      <Column
+        bodyStyle={{ flex: `0 0 ${getButtonSectionWidth(props.buttons)}` }}
+        headerStyle={{ flex: `0 0 ${getButtonSectionWidth(props.buttons)}` }}
+        body={(m) => (
+          <div className="flex">{renderButtons(props.buttons, m)}</div>
         )}
       />
     </DataTable>

@@ -26,6 +26,15 @@ const ForwardInferenceView = (props) => {
     value: null,
   });
 
+  const resetState = () => {
+    setName("");
+    setAllFacts(true);
+    setColor({
+      random: true,
+      value: null,
+    });
+  };
+
   useEffect(() => {
     dispatch(changeHistory("Wnioskowanie w przód"));
   }, []);
@@ -89,6 +98,7 @@ const ForwardInferenceView = (props) => {
                   let newMetrics = r.toPojo();
                   dispatch(addMetrics({ metrics: newMetrics }));
                   setBlock(false);
+                  resetState();
                 });
             }}
           />

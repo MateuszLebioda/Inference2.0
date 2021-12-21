@@ -24,7 +24,7 @@ export const fileSlice = createSlice({
     removeMetrics: (state, action) => {
       const newFile = { ...state.value };
       newFile.metrics = [...state.value.metrics].filter(
-        (m) => m.id !== action.payload.id
+        (m) => m.id !== action.payload
       );
       state.value = newFile;
     },
