@@ -46,6 +46,15 @@ class DependencyService {
       );
   };
 
+  getCompleteFact = (fact) => {
+    let attributes = [...store.getState().file.value.attributes];
+    if (!attributes) {
+      return null;
+    }
+    let attributeName = attributes.find((a) => a.id === fact.attributeID).value;
+    return { ...fact, attributeName: attributeName };
+  };
+
   getCompleteFacts = (facts) => {
     let attributes = [...store.getState().file.value.attributes];
     if (!attributes) {

@@ -91,15 +91,17 @@ const ForwardInferenceView = (props) => {
             icon="pi pi-cog"
             onClick={() => {
               setBlock(true);
-              let metrics = new Metrics(name, color.value);
-              forwardInference
-                .inference(metrics, !allFacts && selectedFacts)
-                .then((r) => {
-                  let newMetrics = r.toPojo();
-                  dispatch(addMetrics({ metrics: newMetrics }));
-                  setBlock(false);
-                  resetState();
-                });
+              let metrics = new Metrics(
+                name,
+                color.value,
+                !allFacts && selectedFacts
+              );
+              forwardInference.inference(metrics).then((r) => {
+                let newMetrics = r.toPojo();
+                dispatch(addMetrics({ metrics: newMetrics }));
+                setBlock(false);
+                resetState();
+              });
             }}
           />
         </div>

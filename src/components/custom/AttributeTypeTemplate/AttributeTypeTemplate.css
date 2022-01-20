@@ -2,14 +2,14 @@
   padding: 5px;
   border-radius: 7px;
   font-weight: bold;
-  background-color: #c8e6c9;
-  color: #256029;
+  background-color: var(--continous-template-background);
+  color: var(--continous-template-color);
 }
 
 .attribute-type-template-SYMBOLIC {
   padding: 5px;
   border-radius: 7px;
   font-weight: bold;
-  background-color: #b3e5fc;
-  color: #23547b;
+  background-color: var(--symbolic-template-background);
+  color: var(--symbolic-template-color);
 }

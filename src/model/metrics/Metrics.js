@@ -2,12 +2,16 @@ import IdService from "../../services/IdService";
 import { RandomRGBColor } from "../../services/tools/RandomRGBColor";
 import store from "../../store";
 import moment from "moment";
+import ForwardExplainModel from "../../services/inference/forward/ForwardExplainModel";
 
 export class Metrics {
-  constructor(name, color) {
+  constructor(name, color, facts) {
     this.id = IdService.getId([...store.getState().file.value.metrics]);
     this.name = name === "" ? `Wnioskowanie numer ${this.id + 1}` : name;
     this.color = color ? color : RandomRGBColor.getRandomColor();
+    this.startFacts = (
+      facts ? facts : [...store.getState().file.value.facts]
+    ).map((f) => new ForwardExplainModel(f));
   }
 
   id = null;
@@ -18,39 +22,52 @@ export class Metrics {
   iterations = 0;
   checkedRules = 0;
   activatedRules = [];
-  oldFacts = [];
+  startFacts = [];
   newFacts = [];
-  getAllFacts = () => {
-    return [...this.oldFacts, ...this.newFacts];
+
+  getAllFactExplainModels = () => {
+    return [...this.startFacts, ...this.newFacts];
   };
+
+  getAllFacts = () => {
+    return this.getAllFactExplainModels().map((f) => f.fact);
+  };
+
   getTotalTime = () => {
     return this.timeStart && this.timeEnd ? this.timeEnd - this.timeStart : 0;
   };
+
   getTotalTimeSecond = () => {
     return Math.round((this.getTotalTime() / 1000) * 1000) / 1000;
   };
-  setOldFacts = (facts) => {
-    this.oldFacts = [...facts];
+
+  addNewFactExplainModel = (rule, explainModels) => {
+    this.newFacts.push(
+      new ForwardExplainModel(rule.conclusion, rule, explainModels)
+    );
   };
-  addNewFact = (fact) => {
-    this.newFacts.push({ ...fact });
-  };
+
   addActivatedRule = (rule) => {
     this.activatedRules.push({ ...rule });
   };
+
   incrementIterations = () => {
     this.iterations = this.iterations + 1;
   };
+
   incrementCheckedRules = () => {
     this.checkedRules = this.checkedRules + 1;
   };
+
   startCountingTime = () => {
     this.timeStart = performance.now();
     this.date = new Date();
   };
+
   endCountingTime = () => {
     this.timeEnd = performance.now();
   };
+
   parseDate = (format = null) => {
     return moment(this.date).format(format ? format : "YYYY-MM-DD HH:MM:SS");
   };
@@ -66,7 +83,7 @@ export class Metrics {
       iterations: this.iterations,
       checkedRules: this.checkedRules,
       activatedRules: this.activatedRules,
-      oldFacts: this.oldFacts,
+      startFacts: this.startFacts,
       newFacts: this.newFacts,
     };
   };

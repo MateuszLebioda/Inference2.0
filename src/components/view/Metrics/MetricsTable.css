@@ -1,1 +1,48 @@
+.metrics-view-date-column {
+  flex: 0 0 7rem !important;
+  padding: 0.5rem !important;
+}
 
+.metrics-view-date-column .p-column-header-content {
+  width: 100%;
+}
+
+.metrics-view-date-column .p-column-header-content span {
+  width: 100%;
+  text-align: center;
+}
+
+.metrics-view-name-column {
+  flex: 0 0 1 !important;
+  padding: 0.5rem !important;
+}
+
+.metrics-view-iteration-column {
+  flex: 0 0 5rem !important;
+  padding: 0.5rem !important;
+}
+
+.metrics-view-checked-rules-column {
+  flex: 0 0 7rem !important;
+  padding: 0.5rem !important;
+}
+
+.metrics-view-activated-rules-column {
+  flex: 0 0 7rem !important;
+  padding: 0.5rem !important;
+}
+
+.metrics-view-new-facts-column {
+  flex: 0 0 5rem !important;
+  padding: 0.5rem !important;
+}
+
+.metrics-view-time-column {
+  flex: 0 0 7rem !important;
+  padding: 0.5rem !important;
+}
+
+.metrics-view-color-column {
+  flex: 0 0 4rem !important;
+  padding: 0.5rem !important;
+}

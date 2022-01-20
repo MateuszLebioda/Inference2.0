@@ -3,35 +3,39 @@ import FactService from "../../model/fact/FactService";
 import RuleService from "../../model/rule/RuleService";
 import DefaultInference from "./DefaultInference";
 import store from "../../store";
-import { Metrics } from "../../model/metrics/Metrics";
+import ForwardInferenceHelper from "./forward/ForwardInferenceHelper";
 
 class ForwardInference extends DefaultInference {
   ruleService = new RuleService();
   factService = new FactService();
 
-  metrics = new Metrics();
+  metrics;
 
-  inference = (metric, facts = null, rules = null) => {
+  forwardInferenceHelper = new ForwardInferenceHelper();
+
+  inference = (metric) => {
     this.metrics = metric;
-    let inferenceRules = this.ruleService.copyRulesAndMarkAsNotActive(
-      rules ? rules : [...store.getState().file.value.rules]
-    );
-    this.metrics.setOldFacts(
-      facts ? [...facts] : [...store.getState().file.value.facts]
-    );
+    let inferenceRules = this.ruleService.copyRulesAndMarkAsNotActive([
+      ...store.getState().file.value.rules,
+    ]);
     this.metrics.startCountingTime();
 
-    let newFact;
+    let activatedRule;
 
     while (
-      (newFact = this.findNewFact(this.metrics.getAllFacts(), inferenceRules))
+      (activatedRule = this.findNewFact(
+        this.metrics.getAllFactExplainModels(),
+        inferenceRules
+      ))
     ) {
       if (
         !this.metrics
           .getAllFacts()
-          .some((nf) => this.factService.equals(nf, newFact))
+          .some((fact) =>
+            this.factService.equals(fact, activatedRule[0].conclusion)
+          )
       ) {
-        this.metrics.addNewFact(newFact);
+        this.metrics.addNewFactExplainModel(activatedRule[0], activatedRule[1]);
       }
     }
 
@@ -39,29 +43,20 @@ class ForwardInference extends DefaultInference {
     return Promise.resolve(this.metrics);
   };
 
-  findNewFact = (facts, rules) => {
+  findNewFact = (factsExplainMethod, rules) => {
     this.metrics.incrementIterations();
     for (let r of rules) {
       this.metrics.incrementCheckedRules();
       if (!r.activated) {
-        let isRequirementsMet = true;
-        for (let c of r.conditions) {
-          let isConditionRequirementsMet = false;
-          for (let f of facts) {
-            if (this.isRequirementsMet(f, c)) {
-              isConditionRequirementsMet = true;
-              break;
-            }
-          }
-          if (!isConditionRequirementsMet) {
-            isRequirementsMet = false;
-            break;
-          }
-        }
+        let [isRequirementsMet, factExplainArr] =
+          this.forwardInferenceHelper.isRulesConditionsMet(
+            r,
+            factsExplainMethod
+          );
         if (isRequirementsMet) {
           this.metrics.addActivatedRule(r);
           r.activated = true;
-          return r.conclusion;
+          return [r, factExplainArr];
         }
       }
     }
