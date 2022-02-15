@@ -43,8 +43,15 @@ const RuleView = (props) => {
 
   const menuItems = [
     {
-      label: "Dodaj fakt",
+      label: "Dodaj regułę",
       icon: "pi pi-plus",
+      command: () => {
+        setRuleEditDialog({
+          visible: true,
+          fact: null,
+          newRule: true,
+        });
+      },
     },
   ];
 
@@ -83,6 +90,7 @@ const RuleView = (props) => {
 
           <ActionIconButton
             tooltip="Więcej..."
+            tooltipPosition="left"
             icon="pi-ellipsis-v"
             className="p-button-secondary"
             action={(event) => menu.current.toggle(event)}
@@ -177,14 +185,16 @@ const RuleView = (props) => {
           setRuleEditDialog({
             rule: null,
             visible: false,
+            newRule: false,
           })
         }
+        newRule={ruleEditDialog.newRule}
         rule={ruleEditDialog.rule}
         onSave={(e) => {
           delete e.attributeName;
 
           if (ruleEditDialog.newFact) {
-            // updateModelService.addNewFact(e);
+            updateModelService.addNewRule(e);
           } else {
             updateModelService.updateRule(e);
           }
@@ -192,7 +202,7 @@ const RuleView = (props) => {
           setRuleEditDialog({
             rule: null,
             visible: false,
-            newFact: false,
+            newRule: false,
           });
         }}
       />

@@ -13,10 +13,16 @@ import PrimaryButton from "../../custom/PrimaryButton/PrimaryButton";
 const RuleEditDialog = (props) => {
   const [tempRule, setTempRule] = useState(null);
   useEffect(() => {
-    if (props.rule) {
-      setTempRule(ruleService.createRuleToEdit(props.rule));
+    console.log(props);
+    if (props.rule || props.newRule) {
+      let tempRule = { ...props.rule };
+      if (props.newRule) {
+        tempRule = ruleService.createEmptyRule();
+        tempRule.conclusion = factService.createEmptyFact();
+      }
+      setTempRule(ruleService.createRuleToEdit(tempRule));
     }
-  }, [props.rule]);
+  }, [props.rule, props.newRule]);
 
   const factService = new FactService();
   const ruleService = new RuleService();
@@ -26,17 +32,19 @@ const RuleEditDialog = (props) => {
       label: "Dodaj warunek",
       icon: "pi pi-plus",
       command: () => {
-        setTempRule((prev) => {
-          let tempRule = { ...prev };
-          tempRule.conditions = tempRule.conditions.concat(
-            factService.getFactToEdit(
-              factService.createEmptyFact(
-                IdService.getNextConditionIdToTempElement(tempRule.conditions)
+        if (tempRule.conditions) {
+          setTempRule((prev) => {
+            let tempRule = { ...prev };
+            tempRule.conditions = tempRule.conditions.concat(
+              factService.getFactToEdit(
+                factService.createEmptyFact(
+                  IdService.getNextConditionIdToTempElement(tempRule.conditions)
+                )
               )
-            )
-          );
-          return tempRule;
-        });
+            );
+            return tempRule;
+          });
+        }
       },
     },
     {
@@ -103,7 +111,10 @@ const RuleEditDialog = (props) => {
       footer={dialogFooter()}
       header="Edycja reguły"
       visible={props.visible}
-      onHide={() => props.onHide()}
+      onHide={() => {
+        setTempRule(null);
+        props.onHide();
+      }}
       style={{ width: "80vw", minWidth: "1200px" }}
     >
       <div className="flex">
@@ -150,13 +161,14 @@ const RuleEditDialog = (props) => {
           }
           conditions={tempRule && [tempRule.conclusion]}
           buttons={conditionButtons}
-          changeName={(e) => {
+          changeName={(e, a) => {
             setTempRule({
               ...tempRule,
               conclusion: {
                 ...tempRule.conclusion,
                 attributeName: e.value,
                 attributeID: e.id,
+                type: e.type,
                 value: null,
               },
             });

@@ -41,6 +41,22 @@ class UpdateModelService {
     return Promise.resolve(fact);
   };
 
+  addNewRule = (rule) => {
+    let tempRules = [...store.getState().file.value.rules];
+
+    rule.id = IdService.getId(tempRules);
+
+    store.dispatch(
+      updateElement({
+        attributes: [...store.getState().file.value.attributes],
+        rules: tempRules.concat([rule]),
+        facts: [...store.getState().file.value.facts],
+      })
+    );
+
+    return Promise.resolve(rule);
+  };
+
   updateRule = (rule) => {
     let attributes = [...store.getState().file.value.attributes];
     let facts = [...store.getState().file.value.facts];
