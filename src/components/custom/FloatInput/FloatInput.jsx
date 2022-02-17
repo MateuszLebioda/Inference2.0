@@ -46,10 +46,7 @@ const FloatInput = (props) => {
   };
 
   return (
-    <div
-      className={`p-field p-col-12 p-md-4 ${props.className}`}
-      style={props.style}
-    >
+    <div className={`${props.className}`} style={props.style}>
       <span className={getClassName()} style={{ width: "100%" }}>
         {iconRequired() && <i className={`pi ${getIcon()}`} />}
         <InputText

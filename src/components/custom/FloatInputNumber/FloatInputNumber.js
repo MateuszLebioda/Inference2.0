@@ -47,10 +47,7 @@ const FloatInputNumber = (props) => {
   };
 
   return (
-    <div
-      className={`p-field p-col-12 p-md-4 ${props.className}`}
-      style={props.style}
-    >
+    <div className={`${props.className}`} style={props.style}>
       <span className={getClassName()} style={{ width: "100%" }}>
         {iconRequired() && <i className={`pi ${getIcon()}`} />}
         <InputNumber
@@ -60,6 +57,7 @@ const FloatInputNumber = (props) => {
           className={`${inputClassName()} input-number-width`}
           id="inputtext"
           value={props.value}
+          style={{ width: "100%" }}
           onChange={(e) => props.onChange(e.value)}
         />
         {props.label && <label htmlFor="inputtext">{props.label}</label>}

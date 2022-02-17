@@ -16,7 +16,7 @@ import AndTemplate from "../../custom/AndTemplate/AndTemplate";
 import IfTemplate from "../../custom/IfTemplate/IfTemplate";
 import ThenTemplate from "../../custom/ThenTemplate/ThenTemplate";
 import RuleDisplay from "./RuleDisplay";
-import RuleEditDialog from "./RuleEditDialog";
+import RuleEditDialog from "./RuleEditDialog/RuleEditDialog";
 import "./RuleView.css";
 
 const RuleView = (props) => {

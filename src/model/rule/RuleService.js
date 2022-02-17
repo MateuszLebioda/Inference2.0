@@ -1,4 +1,6 @@
+import IdService from "../../services/IdService";
 import FactService from "../fact/FactService";
+import { operator } from "../operator/Operator";
 
 class RuleService {
   factService = new FactService();
@@ -22,27 +24,41 @@ class RuleService {
     return { ...rule, conditions: tempConditions };
   };
 
-  changeConditionName = (rule, condition, newCondition) => {
-    let tempConditions = [...rule.conditions];
-    let index = tempConditions.findIndex(
-      (r) => r.attributeID === condition.attributeID
-    );
-    let tempCondition = tempConditions[index];
-    tempCondition.attributeName = newCondition.value;
-    tempCondition.attributeID = newCondition.id;
-    tempCondition.type = newCondition.type;
-    tempCondition.value = null;
-    tempConditions.splice(index, 1, tempCondition);
-    return { ...rule, conditions: tempConditions };
+  updateRuleFact = (fact, newFact) => {
+    let tempFact = { ...fact, ...newFact };
+    return newFact.attributeID !== undefined &&
+      fact.attributeID !== newFact.attributeID
+      ? {
+          ...tempFact,
+          value: null,
+          operator: operator.EQUALS,
+        }
+      : tempFact;
   };
 
-  changeConditionValue = (rule, condition, value) => {
-    let tempConditions = [...rule.conditions];
-    let index = tempConditions.findIndex(
-      (r) => r.attributeID === condition.attributeID
+  addEmptyConditions = (rule) => {
+    let tempRule = { ...rule };
+    tempRule.conditions = tempRule.conditions.concat(
+      this.factService.getFactToEdit(
+        this.factService.createEmptyFact(
+          IdService.getNextConditionIdToTempElement(tempRule.conditions)
+        )
+      )
     );
-    let tempCondition = tempConditions[index];
-    tempCondition.value = value;
+    return tempRule;
+  };
+
+  changeConclusion = (rule, newConclusion) => {
+    let tempCondition = this.updateRuleFact(rule.conclusion, newConclusion);
+    return { ...rule, conclusion: tempCondition };
+  };
+
+  changeConclusionByIndex = (rule, index, newConclusion) => {
+    let tempCondition = this.updateRuleFact(
+      rule.conditions[index],
+      newConclusion
+    );
+    let tempConditions = [...rule.conditions];
     tempConditions.splice(index, 1, tempCondition);
     return { ...rule, conditions: tempConditions };
   };
@@ -59,7 +75,6 @@ class RuleService {
 
   mapRuleToEditToRule = (rule) => {
     let { attributeName, ...ruleToEdit } = rule;
-    console.log(rule);
     ruleToEdit.conclusion = this.factService.mapEditFactToFact(rule.conclusion);
     ruleToEdit.conditions = rule.conditions.map((c) =>
       this.factService.mapEditFactToFact(c)

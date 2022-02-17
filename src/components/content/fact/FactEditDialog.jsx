@@ -8,11 +8,11 @@ import FactValidator, {
   FACT_ATTRIBUTES_ERRORS,
   FACT_VALUE_ERRORS,
 } from "../../../services/validators/FactValidator";
-import ActionIconButton from "../../custom/ActionIconButton/ActionIconButton";
 import AttributeTypeTemplate from "../../custom/AttributeTypeTemplate/AttributeTypeTemplate";
+import FactAttributeDropdown from "../../custom/FactAttributeDropdown/FactAttributeDropdown";
+import FactValueDropdown from "../../custom/FactValueDropdown/FactValueDropdown";
 import PrimaryButton from "../../custom/PrimaryButton/PrimaryButton";
-import RuleAttributeDropdown from "../../custom/RuleAttributeDropdown/RuleAttributeDropdown";
-import RuleValueDropdown from "../../custom/RuleValueDropdown/RuleValueDropdown";
+import "./FactEditDialog.css";
 
 const FactEditDialog = (props) => {
   const factService = new FactService();
@@ -71,20 +71,6 @@ const FactEditDialog = (props) => {
     });
   };
 
-  const restoreDefaultValues = () => {
-    let originalAttribute = getNameOptions().find(
-      (a) => a.id === fact.defaultAttributeID
-    );
-    setFact({
-      ...fact,
-      value: fact.defaultValue,
-      attributeName: originalAttribute.value,
-      attributeID: fact.defaultAttributeID,
-      type: fact.defaultType,
-      errors: [],
-    });
-  };
-
   const isFormValid = () => {
     return fact && fact.errors.length === 0;
   };
@@ -113,23 +99,7 @@ const FactEditDialog = (props) => {
     );
   };
 
-  const getButtonTemplate = () => {
-    if (
-      props.fact &&
-      fact &&
-      !factService.equals(fact, props.fact) &&
-      !props.newFact
-    ) {
-      return (
-        <ActionIconButton
-          style={{ width: "80px", marginRight: "15px" }}
-          icon="pi-refresh"
-          tooltip="Przywróć pierwotne wartości"
-          action={() => restoreDefaultValues()}
-        />
-      );
-    }
-  };
+  console.log(fact);
 
   return (
     <Dialog
@@ -142,15 +112,13 @@ const FactEditDialog = (props) => {
       }}
       onHide={() => props.onHide()}
     >
-      <div className="space-between" style={{ marginTop: "20px" }}>
-        {fact && fact.attributeID && (
-          <AttributeTypeTemplate
-            option={fact && fact.type}
-            short
-            className="mr-2"
-          />
-        )}
-        <RuleAttributeDropdown
+      <div className="fact-edit-grid-container">
+        <AttributeTypeTemplate
+          option={fact && fact.type}
+          short
+          className="mx-auto"
+        />
+        <FactAttributeDropdown
           noHeader
           value={fact && fact.attributeName}
           className="w-full"
@@ -162,12 +130,8 @@ const FactEditDialog = (props) => {
             updateFactAttribute(e);
           }}
         />
-        <div
-          style={{ margin: "auto", paddingRight: "15px", paddingLeft: "15px" }}
-        >
-          =
-        </div>
-        <RuleValueDropdown
+        <div className="m-auto"> = </div>
+        <FactValueDropdown
           type={fact && fact.type}
           errors={
             fact && fact.errors.filter((e) => FACT_VALUE_ERRORS.includes(e))
@@ -178,7 +142,6 @@ const FactEditDialog = (props) => {
           attributeID={fact && fact.attributeID}
           onChange={(e) => updateFactValue(e)}
         />
-        {getButtonTemplate()}
       </div>
     </Dialog>
   );

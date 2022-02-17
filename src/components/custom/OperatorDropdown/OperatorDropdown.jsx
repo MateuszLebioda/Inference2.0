@@ -1,16 +1,18 @@
-import { Dropdown } from "primereact/dropdown";
 import { attributeType } from "../../../model/attribute/AttributeType";
 import { operator, symbolicOperator } from "../../../model/operator/Operator";
+import FloatDropdown from "../FloatDropdown/FloatDropdown";
 
 const OperatorDropdown = (props) => {
   return (
-    <Dropdown
+    <FloatDropdown
       value={props.value}
       options={Object.values(
         props.type === attributeType.SYMBOLIC ? symbolicOperator : operator
       )}
       className={props.className}
-      onChange={(e) => props.onChange(e.target.value)}
+      onChange={(e) => {
+        props.onChange(e);
+      }}
     />
   );
 };

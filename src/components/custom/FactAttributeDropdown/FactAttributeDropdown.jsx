@@ -3,7 +3,7 @@ import DependencyService from "../../../services/dependency/DependencyService";
 import AttributeTypeTemplate from "../AttributeTypeTemplate/AttributeTypeTemplate";
 import FloatDropdown from "../FloatDropdown/FloatDropdown";
 
-const RuleAttributeDropdown = (props) => {
+const FactAttributeDropdown = (props) => {
   const [attributes] = useState(DependencyService.getAttributesValue());
 
   const itemTemplate = (e) => {
@@ -32,4 +32,4 @@ const RuleAttributeDropdown = (props) => {
   );
 };
 
-export default RuleAttributeDropdown;
+export default FactAttributeDropdown;

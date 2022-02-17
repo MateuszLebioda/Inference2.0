@@ -3,7 +3,7 @@ import DependencyService from "../../../services/dependency/DependencyService";
 import FloatDropdown from "../FloatDropdown/FloatDropdown";
 import FloatInputNumber from "../FloatInputNumber/FloatInputNumber";
 
-const RuleValueDropdown = (props) => {
+const FactValueDropdown = (props) => {
   return props.type === attributeType.SYMBOLIC ? (
     <FloatDropdown
       errors={props.errors}
@@ -28,4 +28,4 @@ const RuleValueDropdown = (props) => {
   );
 };
 
-export default RuleValueDropdown;
+export default FactValueDropdown;
