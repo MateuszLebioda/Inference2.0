@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Column } from "primereact/column";
+import { confirmDialog } from "primereact/confirmdialog";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { Menu } from "primereact/menu";
@@ -59,8 +60,22 @@ const RuleView = (props) => {
     {
       icon: "pi-trash",
       className: "p-button-danger",
-      tooltip: "Usuń fakt",
+      tooltip: "Usuń regułę",
       tooltipPosition: "left",
+      action: (rule) => {
+        confirmDialog({
+          position: "right",
+          header: "Potwierdź usunięcie",
+          message: "Czy na pewno chcesz usunąć regułę?",
+          icon: "pi pi-trash",
+          acceptClassName: "p-button-danger",
+          acceptLabel: "Tak",
+          rejectLabel: "Nie",
+          style: { width: "400px" },
+          accept: () => updateModelService.deleteRule(rule),
+          reject: () => {},
+        });
+      },
     },
     {
       icon: "pi-pencil",
@@ -191,9 +206,7 @@ const RuleView = (props) => {
         newRule={ruleEditDialog.newRule}
         rule={ruleEditDialog.rule}
         onSave={(e) => {
-          delete e.attributeName;
-
-          if (ruleEditDialog.newFact) {
+          if (ruleEditDialog.newRule) {
             updateModelService.addNewRule(e);
           } else {
             updateModelService.updateRule(e);

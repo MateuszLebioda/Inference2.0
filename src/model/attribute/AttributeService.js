@@ -108,6 +108,29 @@ class AttributeService {
     return tempAttribute;
   };
 
+  /**
+   @param {
+      id: null,
+      type: null,
+      value: null,
+      defaultValue: null
+      desc: null,
+      collections: [],
+      errors: [],
+      warnings: []
+    } attribute 
+   @returns Simple Attribute without edit fields
+  */
+  mapAttributeToEditToAttribute = (attribute) => {
+    let { defaultValue, errors, warnings, ...tempAttribute } = attribute;
+    tempAttribute.collections = attribute.collections.map((c) =>
+      this.attributeCollectionService.mapCollectionAttributeToEditToCollectionElement(
+        c
+      )
+    );
+    return tempAttribute;
+  };
+
   copyAttribute = (attribute) => {
     let tempAttribute = this.createEmptyAttribute();
     tempAttribute.id = attribute.id;

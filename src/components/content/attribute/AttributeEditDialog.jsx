@@ -168,12 +168,15 @@ const AttributeEditDialog = (props) => {
   };
 
   const handleSave = () => {
+    let attribute =
+      attributeService.mapAttributeToEditToAttribute(tempAttribute);
     if (props.insertMode) {
-      updateModelService.addAttribute(tempAttribute);
+      updateModelService.addAttribute(attribute);
+      showBottomRight();
       props.onHide();
     } else {
       dispatch(blockUiWithMessage(SAVE_CHANGES));
-      updateModelService.updateAttribute(tempAttribute).then((r) => {
+      updateModelService.updateAttribute(attribute).then((r) => {
         dispatch(unBlockUi());
         showBottomRight();
         props.onHide();

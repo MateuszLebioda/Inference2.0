@@ -21,6 +21,12 @@ export default class AttributeCollectionService {
     return tempCollectionElement;
   };
 
+  mapCollectionAttributeToEditToCollectionElement = (collectionElement) => {
+    let { defaultValue, errors, warnings, tempElement, ...collectionObject } =
+      collectionElement;
+    return collectionObject;
+  };
+
   copyCollectionAttribute = (collectionElement) => {
     let tempCollectionElement = this.createEmptyAttributeCollectionElement(
       collectionElement.id,

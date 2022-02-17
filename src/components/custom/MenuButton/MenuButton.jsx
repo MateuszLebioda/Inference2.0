@@ -11,6 +11,7 @@ const MenuButton = (props) => {
   const button = {
     ...buttonTemplate,
     tooltip: "Więcej...",
+    tooltipPosition: props.tooltipPosition ? props.tooltipPosition : "left",
     icon: "pi-ellipsis-v",
     className: "p-button-secondary py-0",
     action: (x, event) => {

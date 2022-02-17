@@ -25,6 +25,18 @@ class UpdateModelService {
     );
   };
 
+  deleteRule = (rule) => {
+    store.dispatch(
+      updateElement({
+        attributes: [...store.getState().file.value.attributes],
+        facts: [...store.getState().file.value.facts],
+        rules: [...store.getState().file.value.rules].filter(
+          (r) => r.id !== rule.id
+        ),
+      })
+    );
+  };
+
   addNewFact = (fact) => {
     let tempFacts = [...store.getState().file.value.facts];
 
@@ -45,6 +57,8 @@ class UpdateModelService {
     let tempRules = [...store.getState().file.value.rules];
 
     rule.id = IdService.getId(tempRules);
+
+    console.log(tempRules.concat([rule]));
 
     store.dispatch(
       updateElement({

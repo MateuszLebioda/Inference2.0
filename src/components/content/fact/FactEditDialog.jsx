@@ -90,11 +90,7 @@ const FactEditDialog = (props) => {
   };
 
   const handleSave = () => {
-    let tempFact = { ...fact };
-    delete tempFact.errors;
-    delete tempFact.warnings;
-    delete tempFact.defaultAttributeID;
-    delete tempFact.defaultValue;
+    let tempFact = factService.mapEditFactToFact(fact);
     setFact(null);
     props.onSave(tempFact);
   };

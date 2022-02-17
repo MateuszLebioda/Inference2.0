@@ -57,6 +57,16 @@ class RuleService {
     return tempRule;
   };
 
+  mapRuleToEditToRule = (rule) => {
+    let { attributeName, ...ruleToEdit } = rule;
+    console.log(rule);
+    ruleToEdit.conclusion = this.factService.mapEditFactToFact(rule.conclusion);
+    ruleToEdit.conditions = rule.conditions.map((c) =>
+      this.factService.mapEditFactToFact(c)
+    );
+    return ruleToEdit;
+  };
+
   createConclusionToEdit = (rule) => {
     return this.factService.getFactToEdit(rule.conclusion);
   };

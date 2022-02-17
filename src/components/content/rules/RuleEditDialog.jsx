@@ -12,8 +12,8 @@ import PrimaryButton from "../../custom/PrimaryButton/PrimaryButton";
 
 const RuleEditDialog = (props) => {
   const [tempRule, setTempRule] = useState(null);
+
   useEffect(() => {
-    console.log(props);
     if (props.rule || props.newRule) {
       let tempRule = { ...props.rule };
       if (props.newRule) {
@@ -75,7 +75,8 @@ const RuleEditDialog = (props) => {
       className: "p-button-danger",
       tooltip: "Usuń warunek",
       tooltipPosition: "left",
-      action: (c) => {
+      action: (c, i) => {
+        console.log(i);
         setTempRule((prev) => {
           let temp = { ...prev };
           temp.conditions = temp.conditions.filter((e) => e.id !== c.id);
@@ -92,14 +93,9 @@ const RuleEditDialog = (props) => {
           label="Zapisz"
           icon="pi pi-save"
           onClick={() => {
-            let rule = { ...tempRule };
-            delete rule.errors;
-            delete rule.warnings;
-            delete rule.defaultAttributeID;
-            delete rule.defaultValue;
-            delete rule.defaultValue;
-            setTempRule(null);
+            let rule = ruleService.mapRuleToEditToRule(tempRule);
             props.onSave(rule);
+            setTempRule(null);
           }}
         />
       </div>

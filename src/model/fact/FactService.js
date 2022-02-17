@@ -50,5 +50,17 @@ class FactService {
 
     return tempFact;
   };
+
+  mapEditFactToFact = (fact) => {
+    let {
+      errors,
+      warnings,
+      defaultAttributeID,
+      defaultValue,
+      defaultType,
+      ...tempFact
+    } = fact;
+    return tempFact;
+  };
 }
 export default FactService;

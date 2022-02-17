@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import AttributeTypeTemplate from "../../custom/AttributeTypeTemplate/AttributeTypeTemplate";
 import ActionIconButton, {
   getButtonSectionWidth,
@@ -17,7 +17,6 @@ import DependencyService from "../../../services/dependency/DependencyService";
 import AttributeEditDialog from "./AttributeEditDialog";
 import IconLikeButton from "../../custom/IconLikeButton/IconLikeButton";
 import { DEPENDENT_ATTRIBUTE } from "../../../services/validators/AttributeValidator";
-import { Menu } from "primereact/menu";
 import AttributeService from "../../../model/attribute/AttributeService";
 import IdService from "../../../services/IdService";
 import { changeHistory } from "../../../slice/HistorySlice";
@@ -25,10 +24,10 @@ import UpdateModelService from "../../../services/model/UpdateModelService";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import AttributeTypeDropdown from "../../custom/AttributeTypeDropdown/AttributeTypeDropdown";
 import GlobalFilter from "../../custom/GlobalFilter/GlobalFIlter";
+import MenuButton from "../../custom/MenuButton/MenuButton";
 
 const AttributeView = () => {
   const updateModelService = new UpdateModelService();
-  const menu = useRef(null);
   const attributeService = new AttributeService();
 
   useEffect(() => {
@@ -163,12 +162,7 @@ const AttributeView = () => {
               }))
             }
           />
-          <ActionIconButton
-            tooltip="Więcej..."
-            icon="pi-ellipsis-v"
-            className="p-button-secondary"
-            action={(event) => menu.current.toggle(event)}
-          />
+          <MenuButton menuItems={menuItems} />
         </span>
       </div>
     );
@@ -272,7 +266,6 @@ const AttributeView = () => {
         onHide={() => setEditDialog(getDefaultDialogValue())}
         insertMode={editDialog.newAttribute}
       />
-      <Menu model={menuItems} popup ref={menu} id="popup_menu" />
     </>
   );
 };
