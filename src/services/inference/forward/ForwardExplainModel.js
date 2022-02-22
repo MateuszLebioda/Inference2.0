@@ -1,6 +1,9 @@
+import DefaultInferenceHelper from "../DefaultInference";
+
 class ForwardExplainModel {
   constructor(fact, rule, forwardExplainModels) {
-    this.fact = fact;
+    const defaultInferenceHelper = new DefaultInferenceHelper();
+    this.fact = defaultInferenceHelper.getCompleteMetricFact(fact);
     this.rule =
       rule && forwardExplainModels
         ? {

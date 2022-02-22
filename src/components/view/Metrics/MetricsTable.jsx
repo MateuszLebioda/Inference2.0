@@ -66,6 +66,15 @@ const MetricsTable = (props) => {
       <Column
         bodyClassName="metrics-view-iteration-column text-center"
         headerClassName="metrics-view-iteration-column"
+        field="type"
+        header="Typ"
+        body={(e) => {
+          return <i className={`pi pi-${e.type.toLowerCase()}`}></i>;
+        }}
+      />
+      <Column
+        bodyClassName="metrics-view-iteration-column text-center"
+        headerClassName="metrics-view-iteration-column"
         field="iterations"
         header="Iteracje"
         body={(e) => <div className="mx-auto">{e.iterations}</div>}

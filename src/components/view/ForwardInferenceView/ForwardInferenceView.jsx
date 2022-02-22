@@ -3,7 +3,7 @@ import { BlockUI } from "primereact/blockui";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { Metrics } from "../../../model/metrics/Metrics";
+import { ForwardMetrics } from "../../../model/metrics/ForwardMetrics";
 import ForwardInference from "../../../services/inference/ForwardInference";
 import { addMetrics } from "../../../slice/FileSlice";
 import { changeHistory } from "../../../slice/HistorySlice";
@@ -91,7 +91,7 @@ const ForwardInferenceView = (props) => {
             icon="pi pi-cog"
             onClick={() => {
               setBlock(true);
-              let metrics = new Metrics(
+              let metrics = new ForwardMetrics(
                 name,
                 color.value,
                 !allFacts && selectedFacts

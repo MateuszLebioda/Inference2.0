@@ -1,11 +1,11 @@
 /* eslint-disable no-loop-func */
 import FactService from "../../model/fact/FactService";
 import RuleService from "../../model/rule/RuleService";
-import DefaultInference from "./DefaultInference";
+import DefaultInferenceHelper from "./DefaultInference";
 import store from "../../store";
 import ForwardInferenceHelper from "./forward/ForwardInferenceHelper";
 
-class ForwardInference extends DefaultInference {
+class ForwardInference extends DefaultInferenceHelper {
   ruleService = new RuleService();
   factService = new FactService();
 
@@ -28,14 +28,20 @@ class ForwardInference extends DefaultInference {
         inferenceRules
       ))
     ) {
+      this.metrics.addActivatedRule(
+        this.forwardInferenceHelper.getCompleteMetricRule(activatedRule.rule)
+      );
       if (
         !this.metrics
           .getAllFacts()
           .some((fact) =>
-            this.factService.equals(fact, activatedRule[0].conclusion)
+            this.factService.equals(fact, activatedRule.rule.conclusion)
           )
       ) {
-        this.metrics.addNewFactExplainModel(activatedRule[0], activatedRule[1]);
+        this.metrics.addNewFactExplainModel(
+          activatedRule.rule,
+          activatedRule.newFactsExplainMethod
+        );
       }
     }
 
@@ -48,15 +54,17 @@ class ForwardInference extends DefaultInference {
     for (let r of rules) {
       this.metrics.incrementCheckedRules();
       if (!r.activated) {
-        let [isRequirementsMet, factExplainArr] =
+        let newFactsExplainMethod =
           this.forwardInferenceHelper.isRulesConditionsMet(
             r,
             factsExplainMethod
           );
-        if (isRequirementsMet) {
-          this.metrics.addActivatedRule(r);
+        if (newFactsExplainMethod.length > 0) {
           r.activated = true;
-          return [r, factExplainArr];
+          return {
+            rule: r,
+            newFactsExplainMethod: newFactsExplainMethod,
+          };
         }
       }
     }

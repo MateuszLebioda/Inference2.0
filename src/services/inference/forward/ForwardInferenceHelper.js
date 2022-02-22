@@ -1,7 +1,8 @@
 import { attributeType } from "../../../model/attribute/AttributeType";
 import { operator } from "../../../model/operator/Operator";
+import DefaultInferenceHelper from "../DefaultInference";
 
-class ForwardInferenceHelper {
+class ForwardInferenceHelper extends DefaultInferenceHelper {
   isRulesConditionsMet = (rule, factsExplainModels) => {
     let isRequirementsMet = true;
     let factExplainArr = [];
@@ -19,7 +20,7 @@ class ForwardInferenceHelper {
         break;
       }
     }
-    return [isRequirementsMet, factExplainArr];
+    return isRequirementsMet ? factExplainArr : [];
   };
 
   isRequirementsMet = (fact, conclusion) => {

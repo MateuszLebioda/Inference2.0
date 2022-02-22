@@ -99,8 +99,6 @@ const FactEditDialog = (props) => {
     );
   };
 
-  console.log(fact);
-
   return (
     <Dialog
       header={`Edycja faktu`}

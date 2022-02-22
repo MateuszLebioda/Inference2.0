@@ -85,6 +85,7 @@ export class Metrics {
       activatedRules: this.activatedRules,
       startFacts: this.startFacts,
       newFacts: this.newFacts,
+      type: this.type,
     };
   };
 }

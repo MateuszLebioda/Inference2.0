@@ -25,6 +25,7 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import AttributeTypeDropdown from "../../custom/AttributeTypeDropdown/AttributeTypeDropdown";
 import GlobalFilter from "../../custom/GlobalFilter/GlobalFIlter";
 import MenuButton from "../../custom/MenuButton/MenuButton";
+import { v4 } from "uuid";
 
 const AttributeView = () => {
   const updateModelService = new UpdateModelService();
@@ -184,7 +185,11 @@ const AttributeView = () => {
 
     if (DependencyService.isAttributeDependent(attribute)) {
       tempButtons.push(
-        <IconLikeButton icon="pi-lock" tooltip={DEPENDENT_ATTRIBUTE.value} />
+        <IconLikeButton
+          key={v4()}
+          icon="pi-lock"
+          tooltip={DEPENDENT_ATTRIBUTE.value}
+        />
       );
     }
 

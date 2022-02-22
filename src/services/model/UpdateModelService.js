@@ -57,9 +57,6 @@ class UpdateModelService {
     let tempRules = [...store.getState().file.value.rules];
 
     rule.id = IdService.getId(tempRules);
-
-    console.log(tempRules.concat([rule]));
-
     store.dispatch(
       updateElement({
         attributes: [...store.getState().file.value.attributes],

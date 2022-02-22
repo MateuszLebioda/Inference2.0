@@ -4,6 +4,10 @@ import { useState } from "react";
 import { OrganizationChart } from "primereact/organizationchart";
 import DependencyService from "../../../../../services/dependency/DependencyService";
 import "./ExplainChar.css";
+import {
+  buttonTemplate,
+  renderButton,
+} from "../../../ActionIconButton/ActionIconButton";
 
 const ExplainChar = (props) => {
   const [charModel, setCharModel] = useState(null);
@@ -28,6 +32,7 @@ const ExplainChar = (props) => {
       children: children,
     };
   };
+
   if (!charModel) {
     return null;
   }
@@ -59,8 +64,19 @@ const ExplainChar = (props) => {
           </div>
         </div>
         {e.ruleId !== -1 ? (
-          <div className="m-2 mb-3">
-            Na podstawie reguły numer: <strong>{e.ruleId}</strong>
+          <div className="m-2 mb-3 flex justify-content-center">
+            <div className="my-auto">
+              Na podstawie reguły numer: <strong>{e.ruleId}</strong>
+            </div>
+            {renderButton(
+              {
+                ...buttonTemplate,
+                icon: "pi-question text-xs",
+                tooltip: "Szczegóły reguły",
+                action: () => props.showRuleDetails(e.ruleId),
+              },
+              e
+            )}
           </div>
         ) : (
           <div className="m-2">

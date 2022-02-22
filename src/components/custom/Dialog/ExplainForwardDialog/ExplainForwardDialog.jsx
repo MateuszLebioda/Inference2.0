@@ -1,14 +1,33 @@
 import { Dialog } from "primereact/dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FactDropdown from "../../FactDropddown/FactDropdown";
+import RulePreviewDialog from "../../RulePreviewDialog/RulePreviewDialog";
 import ExplainChar from "./ExplainChar/ExplainChar";
 
 const ExplainForwardDialog = (props) => {
   const [chosenFact, setChosenFact] = useState(null);
+  const [newFacts, setNewElements] = useState([]);
+  const [ruleDetails, setRuleDetails] = useState({
+    visible: false,
+    rule: null,
+  });
 
-  const getAllFacts = () => {
-    return [...props.metric.newFacts, ...props.metric.startFacts];
-  };
+  useEffect(() => {
+    if (props.metric) {
+      setNewElements(
+        props.metric.newFacts.map((f, i) => ({
+          ...f,
+          fact: { ...f.fact, id: i },
+        }))
+      );
+    }
+  }, [props.metric]);
+
+  useEffect(() => {
+    if (!chosenFact && newFacts) {
+      setChosenFact(newFacts[0]);
+    }
+  }, [chosenFact, newFacts]);
 
   return (
     <Dialog
@@ -19,19 +38,38 @@ const ExplainForwardDialog = (props) => {
         props.onHide();
       }}
     >
-      <FactDropdown
-        facts={props.metric && props.metric.newFacts.map((f) => f.fact)}
-        onChange={(e) => {
-          setChosenFact(getAllFacts().find((f) => f.fact.id === e.value));
-        }}
-        value={chosenFact ? chosenFact.fact : null}
-      />
+      <div>
+        <div className="h-full my-auto mr-2">
+          <strong>Wybierz fakt do objaśnienia:</strong>
+        </div>
+        <FactDropdown
+          facts={newFacts.map((nf) => nf.fact)}
+          onChange={(e) => {
+            setChosenFact(newFacts.find((nf) => e.value === nf.fact.id));
+          }}
+          value={chosenFact ? chosenFact.fact : null}
+        />
+      </div>
+
       <ExplainChar
         className="m-4"
-        fact={
-          chosenFact
-            ? getAllFacts().find((f) => f.fact.id === chosenFact.fact.id)
-            : null
+        fact={chosenFact}
+        showRuleDetails={(e) => {
+          setRuleDetails({
+            visible: true,
+            rule: props.metric.activatedRules.find((r) => r.id === e),
+          });
+        }}
+      />
+
+      <RulePreviewDialog
+        visible={ruleDetails.visible}
+        rule={ruleDetails.rule}
+        onHide={() =>
+          setRuleDetails({
+            visible: false,
+            rule: null,
+          })
         }
       />
     </Dialog>
