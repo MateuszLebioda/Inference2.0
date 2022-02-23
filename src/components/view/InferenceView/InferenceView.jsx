@@ -1,42 +1,43 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { BlockUI } from "primereact/blockui";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { ForwardMetrics } from "../../../model/metrics/ForwardMetrics";
-import ForwardInference from "../../../services/inference/ForwardInference";
-import { addMetrics } from "../../../slice/FileSlice";
 import { changeHistory } from "../../../slice/HistorySlice";
 import EmptyFunctionsList from "../../custom/EmptyFunctionsList/EmptyFunctionsList";
 import FloatInput from "../../custom/FloatInput/FloatInput";
 import PrimaryButton from "../../custom/PrimaryButton/PrimaryButton";
 import ColorPickerTemplate from "./ColorPicker";
 import FactPicker from "./FactPicker";
+import GoalPicker from "./GoalPicker";
 
-const ForwardInferenceView = (props) => {
+const InferenceView = forwardRef((props, ref) => {
   const dispatch = useDispatch();
   const facts = useSelector((state) => state.file.value.facts);
-  const forwardInference = new ForwardInference();
   const [selectedFacts, setSelectedFacts] = useState([]);
-  const [block, setBlock] = useState(false);
   const [name, setName] = useState("");
   const [allFacts, setAllFacts] = useState(true);
+  const [goal, setGoal] = useState(null);
+  const [withoutGoal, setWithoutGoal] = useState(true);
+
   const [color, setColor] = useState({
     random: true,
     value: null,
   });
 
-  const resetState = () => {
-    setName("");
-    setAllFacts(true);
-    setColor({
-      random: true,
-      value: null,
-    });
-  };
+  useImperativeHandle(ref, () => ({
+    resetState() {
+      setName("");
+      setAllFacts(true);
+      setColor({
+        random: true,
+        value: null,
+      });
+    },
+  }));
 
   useEffect(() => {
-    dispatch(changeHistory("Wnioskowanie w przód"));
+    dispatch(changeHistory(props.historyMessage));
   }, []);
 
   if (facts.length === 0) {
@@ -45,7 +46,7 @@ const ForwardInferenceView = (props) => {
 
   return (
     <BlockUI
-      blocked={block}
+      blocked={props.blocking}
       fullScreen
       template={
         <div>
@@ -85,29 +86,30 @@ const ForwardInferenceView = (props) => {
           selectedFacts={selectedFacts}
           onSelect={(e) => setSelectedFacts(e)}
         />
+        <GoalPicker
+          goal={goal}
+          setGoal={setGoal}
+          withoutGoal={withoutGoal}
+          setWithoutGoal={(e) => setWithoutGoal(e)}
+          mandatory={props.goalMandatory}
+        />
         <div className="flex justify-content-end mt-3">
           <PrimaryButton
             label="Rozpocznij"
             icon="pi pi-cog"
             onClick={() => {
-              setBlock(true);
-              let metrics = new ForwardMetrics(
+              props.onInferenceStart(
                 name,
                 color.value,
-                !allFacts && selectedFacts
+                !allFacts && selectedFacts,
+                goal
               );
-              forwardInference.inference(metrics).then((r) => {
-                let newMetrics = r.toPojo();
-                dispatch(addMetrics({ metrics: newMetrics }));
-                setBlock(false);
-                resetState();
-              });
             }}
           />
         </div>
       </div>
     </BlockUI>
   );
-};
+});
 
-export default ForwardInferenceView;
+export default InferenceView;

@@ -1,11 +1,10 @@
 /* eslint-disable no-loop-func */
 import FactService from "../../model/fact/FactService";
 import RuleService from "../../model/rule/RuleService";
-import DefaultInferenceHelper from "./DefaultInference";
 import store from "../../store";
 import ForwardInferenceHelper from "./forward/ForwardInferenceHelper";
 
-class ForwardInference extends DefaultInferenceHelper {
+class ForwardInference {
   ruleService = new RuleService();
   factService = new FactService();
 

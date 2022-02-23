@@ -16,6 +16,7 @@ const FactDropdown = (props) => {
   return (
     <Dropdown
       placeholder="Wybierz atrybut"
+      disabled={props.disabled}
       itemTemplate={template}
       valueTemplate={() => {
         return props.value ? (

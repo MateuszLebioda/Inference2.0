@@ -2,16 +2,17 @@ import IdService from "../../services/IdService";
 import { RandomRGBColor } from "../../services/tools/RandomRGBColor";
 import store from "../../store";
 import moment from "moment";
-import ForwardExplainModel from "../../services/inference/forward/ForwardExplainModel";
+import ExplainModel from "../../services/inference/forward/ExplainModel";
 
 export class Metrics {
-  constructor(name, color, facts) {
+  constructor(name, color, facts, goal) {
     this.id = IdService.getId([...store.getState().file.value.metrics]);
     this.name = name === "" ? `Wnioskowanie numer ${this.id + 1}` : name;
     this.color = color ? color : RandomRGBColor.getRandomColor();
+    this.goal = goal ? goal : null;
     this.startFacts = (
       facts ? facts : [...store.getState().file.value.facts]
-    ).map((f) => new ForwardExplainModel(f));
+    ).map((f) => new ExplainModel(f));
   }
 
   id = null;
@@ -24,6 +25,7 @@ export class Metrics {
   activatedRules = [];
   startFacts = [];
   newFacts = [];
+  goal = null;
 
   getAllFactExplainModels = () => {
     return [...this.startFacts, ...this.newFacts];
@@ -42,9 +44,7 @@ export class Metrics {
   };
 
   addNewFactExplainModel = (rule, explainModels) => {
-    this.newFacts.push(
-      new ForwardExplainModel(rule.conclusion, rule, explainModels)
-    );
+    this.newFacts.push(new ExplainModel(rule.conclusion, rule, explainModels));
   };
 
   addActivatedRule = (rule) => {
@@ -72,7 +72,7 @@ export class Metrics {
     return moment(this.date).format(format ? format : "YYYY-MM-DD HH:MM:SS");
   };
 
-  toPojo = () => {
+  toPojo() {
     return {
       id: this.id,
       name: this.name,
@@ -86,6 +86,7 @@ export class Metrics {
       startFacts: this.startFacts,
       newFacts: this.newFacts,
       type: this.type,
+      goa: this.goal,
     };
-  };
+  }
 }

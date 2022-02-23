@@ -1,5 +1,6 @@
 import { Dialog } from "primereact/dialog";
 import { useEffect, useState } from "react";
+import { inferenceType } from "../../../../model/metrics/InferenceType";
 import FactDropdown from "../../FactDropddown/FactDropdown";
 import RulePreviewDialog from "../../RulePreviewDialog/RulePreviewDialog";
 import ExplainChar from "./ExplainChar/ExplainChar";
@@ -35,6 +36,11 @@ const ExplainForwardDialog = (props) => {
       header="Moduł objaśniający"
       onHide={() => {
         setChosenFact(null);
+        setNewElements([]);
+        setRuleDetails({
+          visible: false,
+          rule: null,
+        });
         props.onHide();
       }}
     >
@@ -48,6 +54,9 @@ const ExplainForwardDialog = (props) => {
             setChosenFact(newFacts.find((nf) => e.value === nf.fact.id));
           }}
           value={chosenFact ? chosenFact.fact : null}
+          disabled={
+            props.metric && props.metric.type === inferenceType.BACKWARD
+          }
         />
       </div>
 

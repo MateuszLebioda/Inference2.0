@@ -156,6 +156,12 @@ const inference = [
     icon: "pi pi-step-forward",
     command: () => history.push("/inference/forward"),
   },
+  {
+    label: "W tył",
+    value: "Wnioskowanie w tył",
+    icon: "pi pi-step-backward",
+    command: () => history.push("/inference/backward"),
+  },
 ];
 
 const metrics = [
