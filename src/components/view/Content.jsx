@@ -3,9 +3,10 @@ import AttributeView from "./attribute/AttributeView";
 import history from "../../services/history";
 import FactView from "./fact/FactView";
 import RuleView from "./rules/RuleView";
-import MetricsPreview from "../view/Metrics/MetricsPreview";
-import BackwardInferenceView from "../view/InferenceView/BackwardInferenceView";
-import ForwardInferenceView from "../view/InferenceView/ForwardInferenceView";
+import MetricsPreview from "./metrics/MetricsPreview";
+import BackwardInferenceView from "./inferenceView/BackwardInferenceView";
+import ForwardInferenceView from "./inferenceView/ForwardInferenceView";
+import MetricsCompare from "./metrics/metricsCompare/MetricsCompare";
 
 const Content = () => {
   return (
@@ -17,6 +18,10 @@ const Content = () => {
         <Route path="/inference/forward" component={ForwardInferenceView} />
         <Route path="/inference/backward" component={BackwardInferenceView} />
         <Route path="/metrics/preview" component={MetricsPreview} />
+        <Route
+          path="/metrics/compare/:metricsIds?"
+          component={MetricsCompare}
+        />
         <Route path="/" component={AttributeView} />
       </Switch>
     </Router>

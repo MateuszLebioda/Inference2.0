@@ -12,6 +12,11 @@
   text-align: center;
 }
 
+.metrics-view-select-column {
+  flex: 0 0 1rem !important;
+  padding: 0.5rem !important;
+}
+
 .metrics-view-name-column {
   flex: 0 0 1 !important;
   padding: 0.5rem !important;

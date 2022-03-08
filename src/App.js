@@ -4,13 +4,13 @@ import "primeicons/primeicons.css";
 import Navbar from "./components/navbar/Navbar";
 import { BlockUI } from "primereact/blockui";
 import { useSelector } from "react-redux";
-import Content from "./components/content/Content";
 import "./global-style.css";
 import "./templateStyle.css";
 import "./own-flex-style.css";
 import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 import { addLocale, locale } from "primereact/api";
 import { PL_LOCALE } from "./locale";
+import Content from "./components/view/Content";
 const App = () => {
   const blockUI = useSelector((state) => state.block);
   addLocale("pl", PL_LOCALE);

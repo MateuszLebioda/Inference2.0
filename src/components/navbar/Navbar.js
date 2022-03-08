@@ -171,4 +171,10 @@ const metrics = [
     icon: "pi pi-list",
     command: () => history.push("/metrics/preview"),
   },
+  {
+    label: "Porównaj",
+    value: "Porównanie metryk",
+    icon: "pi-arrows-h",
+    command: () => history.push("/metrics/compare"),
+  },
 ];

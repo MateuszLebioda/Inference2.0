@@ -86,7 +86,7 @@ export class Metrics {
       startFacts: this.startFacts,
       newFacts: this.newFacts,
       type: this.type,
-      goa: this.goal,
+      goal: this.goal,
     };
   }
 }

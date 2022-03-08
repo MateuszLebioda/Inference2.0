@@ -40,16 +40,23 @@ const MetricsTable = (props) => {
       rows={25}
       value={metics}
       scrollable
-      scrollHeight="calc(100vh - 170px)"
+      scrollHeight={
+        props.scrollHeight ? props.scrollHeight : `calc(100vh - 170px)`
+      }
       selectionMode={props.selection && "checkbox"}
       dataKey="id"
       selection={props.selection}
       onSelectionChange={(e) => {
-        let tempFact = { ...e };
-        delete tempFact.attributeName;
-        props.onSelect(tempFact);
+        props.onSelect(e.value);
       }}
     >
+      {props.selection && (
+        <Column
+          selectionMode="multiple"
+          bodyClassName="metrics-view-select-column"
+          headerClassName="metrics-view-select-column"
+        />
+      )}
       <Column
         bodyClassName="metrics-view-date-column"
         headerClassName="metrics-view-date-column"
@@ -69,7 +76,7 @@ const MetricsTable = (props) => {
         field="type"
         header="Typ"
         body={(e) => {
-          return <i className={`pi pi-${e.type.toLowerCase()}`}></i>;
+          return e.type && <i className={`pi pi-${e.type.toLowerCase()}`}></i>;
         }}
       />
       <Column
@@ -130,6 +137,10 @@ const MetricsTable = (props) => {
       />
     </DataTable>
   );
+};
+
+MetricsTable.defaultProps = {
+  buttons: [],
 };
 
 export default MetricsTable;

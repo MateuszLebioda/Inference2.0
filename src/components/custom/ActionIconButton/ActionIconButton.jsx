@@ -1,4 +1,5 @@
 import { Button } from "primereact/button";
+import { v4 } from "uuid";
 const ActionIconButton = (props) => {
   return (
     <Button
@@ -29,9 +30,7 @@ export const renderButtons = (button, element, key = null) => {
 export const renderButton = (button, element, id, key = null) => {
   return (
     <ActionIconButton
-      key={`${key ? `${key}-` : "attribute-button-"}${
-        id ? id : Math.floor(Math.random() * 100)
-      }`}
+      key={`${key ? `${key}-` : "attribute-button-"}${id ? id : v4()}`}
       icon={button.icon}
       style={button.style}
       className={button.className}

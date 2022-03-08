@@ -1,6 +1,6 @@
 import { RadioButton } from "primereact/radiobutton";
 import { useSelector } from "react-redux";
-import FactTable from "../../content/fact/FactTable";
+import FactTable from "../fact/FactTable";
 const FactPicker = (props) => {
   const facts = useSelector((state) => state.file.value.facts);
 

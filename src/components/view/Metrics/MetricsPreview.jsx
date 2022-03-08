@@ -11,6 +11,8 @@ import MetricsTable from "./MetricsTable";
 const MetricsPreview = (props) => {
   const dispatch = useDispatch();
 
+  const [selection, setSelection] = useState([]);
+
   const [isExplanationDialogVisible, setExplanationDialogVisible] = useState({
     visible: false,
     metric: null,
@@ -46,7 +48,11 @@ const MetricsPreview = (props) => {
 
   return (
     <div>
-      <MetricsTable buttons={buttons} />
+      <MetricsTable
+        buttons={buttons}
+        selection={selection}
+        onSelect={(e) => setSelection(e)}
+      />
       <ExplainForwardDialog
         visible={isExplanationDialogVisible.visible}
         metric={isExplanationDialogVisible.metric}
