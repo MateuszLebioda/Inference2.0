@@ -14,8 +14,20 @@ const BackwardInferenceView = (props) => {
 
   const childRef = useRef();
 
-  const handleInferenceStart = (name, colorValue, facts, goal) => {
-    let metrics = new BackwardMetrics(name, colorValue, facts, goal);
+  const handleInferenceStart = (
+    name,
+    colorValue,
+    facts,
+    goal,
+    matchingStrategy
+  ) => {
+    let metrics = new BackwardMetrics(
+      name,
+      colorValue,
+      facts,
+      goal,
+      matchingStrategy
+    );
     setBlock(true);
     backwardInference.inference(metrics).then((r) => {
       let newMetrics = r.toPojo();

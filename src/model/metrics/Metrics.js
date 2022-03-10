@@ -2,14 +2,17 @@ import IdService from "../../services/IdService";
 import { RandomRGBColor } from "../../services/tools/RandomRGBColor";
 import store from "../../store";
 import moment from "moment";
-import ExplainModel from "../../services/inference/forward/ExplainModel";
+import ExplainModel from "./ExplainModel";
+import MetricsHelper from "./MetricsHelper";
 
 export class Metrics {
-  constructor(name, color, facts, goal) {
+  metricsHelper = new MetricsHelper();
+
+  constructor(name, color, facts, goal, matchingStrategy) {
     this.id = IdService.getId([...store.getState().file.value.metrics]);
-    this.name = name === "" ? `Wnioskowanie numer ${this.id + 1}` : name;
     this.color = color ? color : RandomRGBColor.getRandomColor();
     this.goal = goal ? goal : null;
+    this.matchingStrategy = matchingStrategy;
     this.startFacts = (
       facts ? facts : [...store.getState().file.value.facts]
     ).map((f) => new ExplainModel(f));
@@ -20,7 +23,6 @@ export class Metrics {
   date = null;
   timeStart = null;
   timeEnd = null;
-  iterations = 0;
   checkedRules = 0;
   activatedRules = [];
   startFacts = [];
@@ -44,15 +46,19 @@ export class Metrics {
   };
 
   addNewFactExplainModel = (rule, explainModels) => {
-    this.newFacts.push(new ExplainModel(rule.conclusion, rule, explainModels));
+    if (!this.factAlreadyExist(rule.conclusion)) {
+      this.newFacts.push(
+        new ExplainModel(rule.conclusion, rule, explainModels)
+      );
+    }
+  };
+
+  factAlreadyExist = (fact) => {
+    return this.metricsHelper.factAlreadyExist(this.getAllFacts(), fact);
   };
 
   addActivatedRule = (rule) => {
-    this.activatedRules.push({ ...rule });
-  };
-
-  incrementIterations = () => {
-    this.iterations = this.iterations + 1;
+    this.activatedRules.push(this.metricsHelper.getCompleteMetricRule(rule));
   };
 
   incrementCheckedRules = () => {
@@ -72,6 +78,10 @@ export class Metrics {
     return moment(this.date).format(format ? format : "YYYY-MM-DD HH:MM:SS");
   };
 
+  isGoalFulFilled = () => {
+    return this.goal ? this.factAlreadyExist(this.goal) : false;
+  };
+
   toPojo() {
     return {
       id: this.id,
@@ -80,13 +90,13 @@ export class Metrics {
       date: this.parseDate(),
       totalTime: this.getTotalTime(),
       totalTimeSecond: this.getTotalTimeSecond(),
-      iterations: this.iterations,
       checkedRules: this.checkedRules,
       activatedRules: this.activatedRules,
       startFacts: this.startFacts,
       newFacts: this.newFacts,
       type: this.type,
       goal: this.goal,
+      matchingStrategy: this.matchingStrategy.name,
     };
   }
 }

@@ -15,9 +15,21 @@ const ForwardInferenceView = (props) => {
 
   const childRef = useRef();
 
-  const handleInferenceStart = (name, colorValue, facts, goal) => {
+  const handleInferenceStart = (
+    name,
+    colorValue,
+    facts,
+    goal,
+    matchingStrategy
+  ) => {
     setBlock(true);
-    let metrics = new ForwardMetrics(name, colorValue, facts, goal);
+    let metrics = new ForwardMetrics(
+      name,
+      colorValue,
+      facts,
+      goal,
+      matchingStrategy
+    );
     forwardInference.inference(metrics).then((r) => {
       let newMetrics = r.toPojo();
       dispatch(addMetrics({ metrics: newMetrics }));

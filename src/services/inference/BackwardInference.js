@@ -1,59 +1,39 @@
-import FactService from "../../model/fact/FactService";
-import RuleService from "../../model/rule/RuleService";
-import { BackwardInferenceHelper } from "./backward/BackwardInferenceHelper";
-import ExplainModel from "./forward/ExplainModel";
-import DefaultInferenceHelper from "./helper/DefaultInferenceHelper";
+import ExplainModel from "../../model/metrics/ExplainModel";
+import { Inference } from "./Inference";
 
-export class BackwardInference extends DefaultInferenceHelper {
-  ruleService = new RuleService();
-  factService = new FactService();
+export class BackwardInference extends Inference {
+  inferenceImplementation = () => {
+    let goalProve = this.proveFact(this.metrics.goal);
+    if (goalProve) {
+      this.metrics.newFacts.push(goalProve.proves);
+    }
+  };
 
-  metrics;
-
-  backwardInferenceHelper = new BackwardInferenceHelper();
-
-  inference = (metric) => {
-    this.metrics = metric;
-    this.metrics.startCountingTime();
-
-    let indirectHypotheses =
-      this.backwardInferenceHelper.findRulesPossibleToActivate(metric.goal);
-
+  proveFact = (fact, explainModel) => {
+    if (!explainModel) {
+      explainModel = new ExplainModel(fact);
+    }
+    let indirectHypotheses = this.findIndirectHypotheses(fact);
     for (let indirectHypothesis of indirectHypotheses) {
-      let indirectHypothesesProve = this.prove(indirectHypothesis);
       this.metrics.addIndirectHypothesis(indirectHypothesis);
+      let indirectHypothesesProve = this.prove(indirectHypothesis);
       if (indirectHypothesesProve.proved) {
-        metric.newFacts.push(indirectHypothesesProve.proves);
+        explainModel.rule.conditions.push(indirectHypothesesProve.proves);
         this.metrics.addActivatedRule(indirectHypothesis);
-        break;
+        return indirectHypothesesProve;
       }
     }
-
-    this.metrics.endCountingTime();
-    return Promise.resolve(this.metrics);
   };
 
   prove = (hypothesis) => {
     let explainModel = new ExplainModel(hypothesis.conclusion, hypothesis);
     for (let condition of hypothesis.conditions) {
-      let conditionProveFact =
-        this.backwardInferenceHelper.findConditionProve(condition);
+      let conditionProveFact = this.findConditionProve(condition);
       if (conditionProveFact) {
         explainModel.rule.conditions.push(new ExplainModel(conditionProveFact));
       } else {
-        let indirectHypotheses =
-          this.backwardInferenceHelper.findRulesPossibleToActivate(condition);
-        let isHypothesisProved = false;
-        for (let indirectHypothesis of indirectHypotheses) {
-          this.metrics.addIndirectHypothesis(indirectHypothesis);
-          let indirectHypothesesProve = this.prove(indirectHypothesis);
-          if (indirectHypothesesProve.proved) {
-            explainModel.rule.conditions.push(indirectHypothesesProve.proves);
-            this.metrics.addActivatedRule(indirectHypothesis);
-            isHypothesisProved = true;
-          }
-        }
-        if (!isHypothesisProved) {
+        let isHypothesisProve = this.proveFact(condition, explainModel);
+        if (!isHypothesisProve) {
           return this.getProveObject();
         }
       }
@@ -66,5 +46,23 @@ export class BackwardInference extends DefaultInferenceHelper {
       proved: explainModel ? true : false,
       proves: explainModel ? explainModel : [],
     };
+  };
+
+  findIndirectHypotheses = (conclusion) => {
+    let indirectHypotheses = this.inferenceRules.filter(
+      (r) =>
+        r.conclusion.attributeID === conclusion.attributeID &&
+        r.conclusion.value === conclusion.value
+    );
+
+    return this.metrics.matchingStrategy.implementation.matchRulesBackward(
+      indirectHypotheses
+    );
+  };
+
+  findConditionProve = (condition) => {
+    return this.metrics.startFacts
+      .map((sf) => sf.fact)
+      .find((f) => this.isRequirementsMet(f, condition));
   };
 }

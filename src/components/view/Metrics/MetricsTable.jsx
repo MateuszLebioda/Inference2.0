@@ -6,19 +6,10 @@ import {
   renderButtons,
 } from "../../custom/ActionIconButton/ActionIconButton";
 import GlobalFilter from "../../custom/GlobalFilter/GlobalFIlter";
-import MenuButton from "../../custom/MenuButton/MenuButton";
 import "./MetricsTable.css";
 
 const MetricsTable = (props) => {
   const metics = useSelector((state) => state.file.value.metrics);
-
-  const menuItems = [
-    {
-      label: "Cofnij wszystkie zmiany",
-      icon: "pi pi-refresh",
-      command: () => {},
-    },
-  ];
 
   const renderHeader = () => {
     return (
@@ -26,7 +17,6 @@ const MetricsTable = (props) => {
         <div className="mx-auto">Lista Metryk</div>
         <div className="flex">
           <GlobalFilter />
-          <MenuButton menuItems={menuItems} tooltipPosition={"left"} />
         </div>
       </div>
     );
@@ -71,33 +61,51 @@ const MetricsTable = (props) => {
         header="Nazwa"
       />
       <Column
-        bodyClassName="metrics-view-iteration-column text-center"
-        headerClassName="metrics-view-iteration-column"
+        bodyClassName="metrics-view-type-column text-center"
+        headerClassName="metrics-view-type-column"
         field="type"
         header="Typ"
         body={(e) => {
-          return e.type && <i className={`pi pi-${e.type.toLowerCase()}`}></i>;
+          return (
+            e.type && <i className={`pi pi-${e.type.toLowerCase()} w-full`}></i>
+          );
         }}
       />
+      <Column
+        bodyClassName="metrics-view-matching-strategy-column"
+        headerClassName="metrics-view-matching-strategy-column"
+        field="type"
+        header={(e) => <div className="w-full text-center">Strategia</div>}
+        body={(e) => (
+          <div className="w-full text-center">{e.matchingStrategy}</div>
+        )}
+      />
+
       <Column
         bodyClassName="metrics-view-iteration-column text-center"
         headerClassName="metrics-view-iteration-column"
         field="iterations"
         header="Iteracje"
-        body={(e) => <div className="mx-auto">{e.iterations}</div>}
+        body={(e) => (
+          <div className="mx-auto">{e.iterations ? e.iterations : "-"}</div>
+        )}
       />
       <Column
         bodyClassName="metrics-view-checked-rules-column"
         headerClassName="metrics-view-checked-rules-column text-center"
         field="checkedRules"
-        header="Sprawdzone reguły"
+        header={
+          <div className="flex">Sprawdzone reguły / Hipotezy pośrednie</div>
+        }
         body={(e) => <div className="mx-auto">{e.checkedRules}</div>}
       />
       <Column
         bodyClassName="metrics-view-activated-rules-column"
         headerClassName="metrics-view-activated-rules-column text-center"
         field="activatedRules.length"
-        header="Aktywowane reguły"
+        header={
+          <div className="flex">Aktywowane reguły / Potwierdzone hipotezy</div>
+        }
         body={(e) => <div className="mx-auto">{e.activatedRules.length}</div>}
       />
       <Column

@@ -1,4 +1,5 @@
 import { RadioButton } from "primereact/radiobutton";
+import { operator } from "../../../model/operator/Operator";
 import FactEditor from "../../custom/FactEditor/FactEditor";
 const GoalPicker = (props) => {
   const factEditTemplate = () => {
@@ -9,7 +10,7 @@ const GoalPicker = (props) => {
           className="w-full"
           fact={props.goal}
           updateFact={(e) => {
-            props.setGoal(e);
+            props.setGoal({ ...e, operator: operator.EQUALS });
           }}
         />
       </div>
@@ -17,7 +18,7 @@ const GoalPicker = (props) => {
   };
 
   return (
-    <div>
+    <div className="mb-2">
       <div className="flex">
         <h5 className="text-xl my-auto w-5rem">Cel:</h5>
         <div style={{ margin: props.margin }}>

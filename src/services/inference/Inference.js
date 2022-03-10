@@ -1,25 +1,28 @@
-import { attributeType } from "../../../model/attribute/AttributeType";
-import { operator } from "../../../model/operator/Operator";
-import DependencyService from "../../dependency/DependencyService";
+import { attributeType } from "../../model/attribute/AttributeType";
+import FactService from "../../model/fact/FactService";
+import { operator } from "../../model/operator/Operator";
+import RuleService from "../../model/rule/RuleService";
+import store from "../../store";
 
-class DefaultInferenceHelper {
-  getCompleteMetricRule = (rule) => {
-    return {
-      id: rule.id,
-      conditions: rule.conditions.map((c) => this.getCompleteMetricFact(c)),
-      conclusion: this.getCompleteMetricFact(rule.conclusion),
-    };
+export class Inference {
+  ruleService = new RuleService();
+  factService = new FactService();
+
+  metrics;
+
+  inferenceRules = [];
+
+  inference = (metric) => {
+    this.metrics = metric;
+    this.metrics.startCountingTime();
+    this.inferenceRules = this.prepareInferenceRules();
+    this.inferenceImplementation();
+    this.metrics.endCountingTime();
+    return Promise.resolve(this.metrics);
   };
 
-  getCompleteMetricFact = (fact) => {
-    let completeFact = DependencyService.getCompleteFact(fact);
-    return {
-      attributeID: completeFact.attributeID,
-      value: completeFact.value,
-      name: completeFact.attributeName,
-      operator: completeFact.operator,
-      type: completeFact.type,
-    };
+  inferenceImplementation = () => {
+    throw new Error("Inference method is not implemented!");
   };
 
   isRequirementsMet = (fact, condition) => {
@@ -57,6 +60,14 @@ class DefaultInferenceHelper {
   isRequirementsMetToSymbolicType = (fact, conclusion) => {
     return fact.value === conclusion.value;
   };
-}
 
-export default DefaultInferenceHelper;
+  prepareInferenceRules = () => {
+    let inferenceRules = this.ruleService.copyRulesAndMarkAsNotActive([
+      ...store.getState().file.value.rules,
+    ]);
+
+    return this.metrics.matchingStrategy.implementation.matchRulesForward(
+      inferenceRules
+    );
+  };
+}

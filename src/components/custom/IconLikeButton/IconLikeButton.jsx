@@ -6,7 +6,7 @@ const IconLikeButton = (props) => {
       <Tooltip target=".icon-tooltip" content={props.tooltip} />
       <i
         className={`pi ${props.icon}`}
-        style={{ padding: "8.5px", paddingBottom: 0 }}
+        style={{ padding: "8.5px", paddingBottom: 0, ...props.iconStyle }}
       ></i>
     </div>
   );

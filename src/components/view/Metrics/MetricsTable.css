@@ -27,13 +27,31 @@
   padding: 0.5rem !important;
 }
 
+.metrics-view-matching-strategy-column {
+  flex: 0 0 8.5rem !important;
+  padding: 0.5rem !important;
+}
+
+.metrics-view-matching-strategy-column .p-column-header-content {
+  width: 100%;
+}
+
+.metrics-view-matching-strategy-column .p-column-header-content span {
+  width: 100%;
+}
+
+.metrics-view-type-column {
+  flex: 0 0 3rem !important;
+  padding: 0.5rem !important;
+}
+
 .metrics-view-checked-rules-column {
-  flex: 0 0 7rem !important;
+  flex: 0 0 11rem !important;
   padding: 0.5rem !important;
 }
 
 .metrics-view-activated-rules-column {
-  flex: 0 0 7rem !important;
+  flex: 0 0 12rem !important;
   padding: 0.5rem !important;
 }
 

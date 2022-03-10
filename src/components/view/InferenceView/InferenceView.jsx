@@ -3,6 +3,7 @@ import { BlockUI } from "primereact/blockui";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { ORDER_MATCH_STRATEGY } from "../../../services/inference/ruleMatchingStrategies/RuleMatchingStategies";
 import { changeHistory } from "../../../slice/HistorySlice";
 import EmptyFunctionsList from "../../custom/EmptyFunctionsList/EmptyFunctionsList";
 import FloatInput from "../../custom/FloatInput/FloatInput";
@@ -10,6 +11,7 @@ import PrimaryButton from "../../custom/PrimaryButton/PrimaryButton";
 import ColorPickerTemplate from "./ColorPicker";
 import FactPicker from "./FactPicker";
 import GoalPicker from "./GoalPicker";
+import MatchStrategyPicker from "./MatchStrategyPicker";
 
 const InferenceView = forwardRef((props, ref) => {
   const dispatch = useDispatch();
@@ -19,11 +21,15 @@ const InferenceView = forwardRef((props, ref) => {
   const [allFacts, setAllFacts] = useState(true);
   const [goal, setGoal] = useState(null);
   const [withoutGoal, setWithoutGoal] = useState(true);
+  const [matchingStrategy, setMatchingStrategy] =
+    useState(ORDER_MATCH_STRATEGY);
 
   const [color, setColor] = useState({
     random: true,
     value: null,
   });
+
+  const headerWidth = "w-10rem";
 
   useImperativeHandle(ref, () => ({
     resetState() {
@@ -79,6 +85,7 @@ const InferenceView = forwardRef((props, ref) => {
               value: e ? null : prev.value,
             }));
           }}
+          headerWidth={headerWidth}
         />
         <FactPicker
           all={allFacts}
@@ -93,6 +100,10 @@ const InferenceView = forwardRef((props, ref) => {
           setWithoutGoal={(e) => setWithoutGoal(e)}
           mandatory={props.goalMandatory}
         />
+        <MatchStrategyPicker
+          value={matchingStrategy}
+          onChange={(e) => setMatchingStrategy(e.value)}
+        />
         <div className="flex justify-content-end mt-3">
           <PrimaryButton
             label="Rozpocznij"
@@ -102,7 +113,8 @@ const InferenceView = forwardRef((props, ref) => {
                 name,
                 color.value,
                 !allFacts && selectedFacts,
-                goal
+                goal,
+                matchingStrategy
               );
             }}
           />

@@ -63,7 +63,7 @@ const ExplainChar = (props) => {
             <div className="my-auto m-2">{e.value}</div>
           </div>
         </div>
-        {e.ruleId !== -1 ? (
+        {e.ruleId !== null ? (
           <div className="m-2 mb-3 flex justify-content-center">
             <div className="my-auto">
               Na podstawie reguły numer: <strong>{e.ruleId}</strong>

@@ -35,7 +35,7 @@ const MetricsCompareDiagrams = (props) => {
 
   const panels = [
     {
-      name: "Całkowity czas w milisekundach",
+      name: "Całkowity czas w sekundach",
       fn: (m) => m.totalTimeSecond,
     },
     {

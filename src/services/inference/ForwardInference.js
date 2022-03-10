@@ -1,72 +1,64 @@
 /* eslint-disable no-loop-func */
-import FactService from "../../model/fact/FactService";
-import RuleService from "../../model/rule/RuleService";
-import store from "../../store";
-import ForwardInferenceHelper from "./forward/ForwardInferenceHelper";
+import { Inference } from "./Inference";
 
-class ForwardInference {
-  ruleService = new RuleService();
-  factService = new FactService();
-
-  metrics;
-
-  forwardInferenceHelper = new ForwardInferenceHelper();
-
-  inference = (metric) => {
-    this.metrics = metric;
-    let inferenceRules = this.ruleService.copyRulesAndMarkAsNotActive([
-      ...store.getState().file.value.rules,
-    ]);
-    this.metrics.startCountingTime();
-
+class ForwardInference extends Inference {
+  inferenceImplementation = () => {
     let activatedRule;
-
-    while (
-      (activatedRule = this.findNewFact(
-        this.metrics.getAllFactExplainModels(),
-        inferenceRules
-      ))
-    ) {
-      this.metrics.addActivatedRule(
-        this.forwardInferenceHelper.getCompleteMetricRule(activatedRule.rule)
+    while ((activatedRule = this.findRuleToActivate())) {
+      this.metrics.addActivatedRule(activatedRule.rule);
+      this.metrics.addNewFactExplainModel(
+        activatedRule.rule,
+        activatedRule.newFactsExplainMethod
       );
-      if (
-        !this.metrics
-          .getAllFacts()
-          .some((fact) =>
-            this.factService.equals(fact, activatedRule.rule.conclusion)
-          )
-      ) {
-        this.metrics.addNewFactExplainModel(
-          activatedRule.rule,
-          activatedRule.newFactsExplainMethod
-        );
+      if (this.metrics.isGoalFulFilled()) {
+        break;
       }
     }
-
-    this.metrics.endCountingTime();
-    return Promise.resolve(this.metrics);
   };
 
-  findNewFact = (factsExplainMethod, rules) => {
+  findRuleToActivate = () => {
     this.metrics.incrementIterations();
-    for (let r of rules) {
-      this.metrics.incrementCheckedRules();
+    for (let r of this.inferenceRules) {
       if (!r.activated) {
-        let newFactsExplainMethod =
-          this.forwardInferenceHelper.isRulesConditionsMet(
-            r,
-            factsExplainMethod
-          );
-        if (newFactsExplainMethod.length > 0) {
+        let ruleCheckAnswer = this.checkRule(r);
+        if (ruleCheckAnswer) {
           r.activated = true;
-          return {
-            rule: r,
-            newFactsExplainMethod: newFactsExplainMethod,
-          };
+          return ruleCheckAnswer;
         }
       }
     }
+  };
+
+  checkRule = (rule) => {
+    this.metrics.incrementCheckedRules();
+    let newFactsExplainMethod = this.isRulesConditionsMet(rule);
+    if (newFactsExplainMethod.length > 0) {
+      return {
+        rule: rule,
+        newFactsExplainMethod: newFactsExplainMethod,
+      };
+    }
+  };
+
+  isRulesConditionsMet = (rule) => {
+    let factsEM = this.metrics.getAllFactExplainModels();
+    let isRequirementsMet = true;
+    let factExplainArr = [];
+    for (let c of rule.conditions) {
+      let isConditionRequirementsMet = false;
+      for (let f of factsEM) {
+        if (this.isRequirementsMet(f.fact, c)) {
+          isConditionRequirementsMet = true;
+          factExplainArr.push(f);
+          break;
+        }
+      }
+      if (!isConditionRequirementsMet) {
+        isRequirementsMet = false;
+        break;
+      }
+    }
+    return isRequirementsMet ? factExplainArr : [];
   };
 }
 
