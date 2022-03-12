@@ -2,13 +2,17 @@
   "name": "inference",
   "version": "0.1.0",
   "private": true,
+  "main": "public/electronStart.js",
+  "homepage": "./",
   "dependencies": {
+    "@electron/remote": "^2.0.7",
     "@reduxjs/toolkit": "^1.6.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "array-shuffle": "^3.0.0",
     "chart.js": "^3.6.2",
+    "electron-is-dev": "^2.0.0",
     "file-saver": "^2.0.5",
     "moment": "^2.29.1",
     "primeflex": "^3.1.0",
@@ -21,13 +25,17 @@
     "react-scripts": "^5.0.0",
     "react-transition-group": "^4.4.2",
     "react-xml-parser": "^1.1.8",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "wait-on": "^6.0.1"
   },
   "scripts": {
     "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "test": "jest",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "electron:build": "npm run build && electron-builder -c.extraMetadata.main=build/electronStart.js",
+    "electron:serve": "concurrently \"npm run start\" \"wait-on http://127.0.0.1:3000/ && electron .\""
   },
   "eslintConfig": {
     "extends": [
@@ -52,6 +60,8 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "babel-jest": "^27.4.6",
+    "electron": "^17.1.2",
+    "electron-builder": "^22.14.13",
     "jest": "^27.4.7",
     "react-test-renderer": "^17.0.2"
   }
