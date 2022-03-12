@@ -9,9 +9,12 @@ export class Metrics {
   metricsHelper = new MetricsHelper();
 
   constructor(name, color, facts, goal, matchingStrategy) {
+    this.attributeCount = store.getState().file.value.attributes.length;
+    this.ruleCount = store.getState().file.value.rules.length;
     this.id = IdService.getId([...store.getState().file.value.metrics]);
     this.color = color ? color : RandomRGBColor.getRandomColor();
     this.goal = goal ? goal : null;
+    this.success = false;
     this.matchingStrategy = matchingStrategy;
     this.startFacts = (
       facts ? facts : [...store.getState().file.value.facts]
@@ -29,6 +32,10 @@ export class Metrics {
   newFacts = [];
   goal = null;
 
+  markAsSuccess = () => {
+    this.success = true;
+  };
+
   getAllFactExplainModels = () => {
     return [...this.startFacts, ...this.newFacts];
   };
@@ -38,7 +45,9 @@ export class Metrics {
   };
 
   getTotalTime = () => {
-    return this.timeStart && this.timeEnd ? this.timeEnd - this.timeStart : 0;
+    return Math.ceil(
+      this.timeStart && this.timeEnd ? this.timeEnd - this.timeStart : 0
+    );
   };
 
   getTotalTimeSecond = () => {
@@ -75,7 +84,7 @@ export class Metrics {
   };
 
   parseDate = (format = null) => {
-    return moment(this.date).format(format ? format : "YYYY-MM-DD HH:MM:SS");
+    return moment(this.date).format(format ? format : "YYYY-MM-DD k:mm:ss");
   };
 
   isGoalFulFilled = () => {
@@ -97,6 +106,10 @@ export class Metrics {
       type: this.type,
       goal: this.goal,
       matchingStrategy: this.matchingStrategy.name,
+      attributeCount: this.attributeCount,
+      ruleCount: this.ruleCount,
+      factCount: this.startFacts.length,
+      success: this.success,
     };
   }
 }

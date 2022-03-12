@@ -1,15 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from "react";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { removeMetrics } from "../../../slice/FileSlice";
 import { changeHistory } from "../../../slice/HistorySlice";
 import { deleteButton } from "../../custom/ActionIconButton/ActionIconButton";
 import ExplainForwardDialog from "../../custom/Dialog/ExplainForwardDialog/ExplainForwardDialog";
 import MetricsTable from "./MetricsTable";
+import { MetricsParser } from "../../../model/metrics/MetricsParser";
 
 const MetricsPreview = (props) => {
   const dispatch = useDispatch();
+
+  const metics = useSelector((state) => state.file.value.metrics);
+
+  const metricsParser = new MetricsParser();
 
   const [isExplanationDialogVisible, setExplanationDialogVisible] = useState({
     visible: false,
@@ -44,9 +49,30 @@ const MetricsPreview = (props) => {
     },
   ];
 
+  const menuItems = [
+    {
+      icon: "pi pi-file",
+      label: "Zapisz jako .json",
+      command: () => metricsParser.parseToJson(metics),
+      disabled: metics.length === 0,
+    },
+    {
+      icon: "pi pi-file-excel",
+      label: "Zapisz jako .xlsx",
+      command: () => metricsParser.parseToExcel(metics),
+      disabled: metics.length === 0,
+    },
+    {
+      icon: "pi pi-file",
+      label: "Zapisz jako .csv",
+      command: () => metricsParser.exportToCsv(metics),
+      disabled: metics.length === 0,
+    },
+  ];
+
   return (
     <div>
-      <MetricsTable buttons={buttons} />
+      <MetricsTable buttons={buttons} showGridlines menuItems={menuItems} />
       <ExplainForwardDialog
         visible={isExplanationDialogVisible.visible}
         metric={isExplanationDialogVisible.metric}

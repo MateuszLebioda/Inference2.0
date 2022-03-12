@@ -105,7 +105,7 @@ class XmlImporter extends Importer {
         fact.operator !== operator.EQUALS
       ) {
         throw new Error(
-          "Fact have to be symbolic type, or continious with equals operator!"
+          "Fact have to be symbolic type, or continous with equals operator!"
         );
       }
       fact.id = this.factId++;
@@ -178,7 +178,7 @@ class XmlImporter extends Importer {
           tempFact.operator !== operator.EQUALS
         ) {
           throw new Error(
-            "Conculsion have to be symbolic type, or continious with equals operator!"
+            "Conclusion have to be symbolic type, or continous with equals operator!"
           );
         }
         tempFact.id = this.factId++;

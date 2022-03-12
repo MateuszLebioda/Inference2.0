@@ -6,6 +6,7 @@ export class BackwardInference extends Inference {
     let goalProve = this.proveFact(this.metrics.goal);
     if (goalProve) {
       this.metrics.newFacts.push(goalProve.proves);
+      this.metrics.markAsSuccess();
     }
   };
 

@@ -6,6 +6,7 @@ import {
   renderButtons,
 } from "../../custom/ActionIconButton/ActionIconButton";
 import GlobalFilter from "../../custom/GlobalFilter/GlobalFIlter";
+import MenuButton from "../../custom/MenuButton/MenuButton";
 import "./MetricsTable.css";
 
 const MetricsTable = (props) => {
@@ -17,13 +18,31 @@ const MetricsTable = (props) => {
         <div className="mx-auto">Lista Metryk</div>
         <div className="flex">
           <GlobalFilter />
+          {props.menuItems && <MenuButton menuItems={props.menuItems} />}
         </div>
       </div>
     );
   };
 
+  const renderCountColumns = () => {
+    return [
+      { header: "Faktów początkowych", value: "factCount" },
+      { header: "Reguł początkowych", value: "ruleCount" },
+      { header: "Atrybutów początkowych", value: "attributeCount" },
+    ].map((element) => (
+      <Column
+        bodyClassName="metrics-view-count-column metrics-table-content"
+        headerClassName="metrics-view-count-column metrics-table-header metrics-table-header-center"
+        field={element.value}
+        header={element.header}
+        body={(e) => <div className="mx-auto">{e[element.value]}</div>}
+      />
+    ));
+  };
+
   return (
     <DataTable
+      showGridlines={props.showGridlines}
       header={renderHeader()}
       className={`row-padding ${props.className}`}
       paginator={metics.length > 0}
@@ -43,26 +62,26 @@ const MetricsTable = (props) => {
       {props.selection && (
         <Column
           selectionMode="multiple"
-          bodyClassName="metrics-view-select-column"
-          headerClassName="metrics-view-select-column"
+          bodyClassName="metrics-view-select-column metrics-table-content"
+          headerClassName="metrics-view-select-column metrics-table-header"
         />
       )}
       <Column
-        bodyClassName="metrics-view-date-column"
-        headerClassName="metrics-view-date-column"
+        bodyClassName="metrics-view-date-column metrics-table-content"
+        headerClassName="metrics-view-date-column metrics-table-header metrics-table-header-center"
         field="date"
         header="Data"
         body={(e) => <div className="text-center">{e.date}</div>}
       />
       <Column
-        bodyClassName="metrics-view-name-column"
-        headerClassName="metrics-view-name-column"
+        bodyClassName="metrics-view-name-column metrics-table-content"
+        headerClassName="metrics-view-name-column metrics-table-header"
         field="name"
         header="Nazwa"
       />
       <Column
-        bodyClassName="metrics-view-type-column text-center"
-        headerClassName="metrics-view-type-column"
+        bodyClassName="metrics-view-type-column text-center metrics-table-content"
+        headerClassName="metrics-view-type-column text-center metrics-table-header metrics-table-header-center"
         field="type"
         header="Typ"
         body={(e) => {
@@ -72,18 +91,17 @@ const MetricsTable = (props) => {
         }}
       />
       <Column
-        bodyClassName="metrics-view-matching-strategy-column"
-        headerClassName="metrics-view-matching-strategy-column"
+        bodyClassName="metrics-view-matching-strategy-column metrics-table-content"
+        headerClassName="metrics-view-matching-strategy-column metrics-table-header metrics-table-header-center"
         field="type"
         header={(e) => <div className="w-full text-center">Strategia</div>}
         body={(e) => (
           <div className="w-full text-center">{e.matchingStrategy}</div>
         )}
       />
-
       <Column
-        bodyClassName="metrics-view-iteration-column text-center"
-        headerClassName="metrics-view-iteration-column"
+        bodyClassName="metrics-view-iteration-column text-center metrics-table-content"
+        headerClassName="metrics-view-iteration-column text-center metrics-table-header metrics-table-header-center"
         field="iterations"
         header="Iteracje"
         body={(e) => (
@@ -91,41 +109,43 @@ const MetricsTable = (props) => {
         )}
       />
       <Column
-        bodyClassName="metrics-view-checked-rules-column"
-        headerClassName="metrics-view-checked-rules-column text-center"
+        bodyClassName="metrics-view-checked-rules-column metrics-table-content"
+        headerClassName="metrics-view-checked-rules-column text-center metrics-table-header metrics-table-header-center"
         field="checkedRules"
         header={
-          <div className="flex">Sprawdzone reguły / Hipotezy pośrednie</div>
+          <div className="flex">Sprawdzone reguły</div>
+          // <div className="flex">Sprawdzone reguły / Hipotezy pośrednie</div>
         }
         body={(e) => <div className="mx-auto">{e.checkedRules}</div>}
       />
       <Column
-        bodyClassName="metrics-view-activated-rules-column"
-        headerClassName="metrics-view-activated-rules-column text-center"
+        bodyClassName="metrics-view-activated-rules-column metrics-table-content"
+        headerClassName="metrics-view-activated-rules-column text-center metrics-table-header metrics-table-header-center"
         field="activatedRules.length"
         header={
-          <div className="flex">Aktywowane reguły / Potwierdzone hipotezy</div>
+          <div className="flex">Aktywowane reguły</div>
+          // <div className="flex">Aktywowane reguły / Potwierdzone hipotezy</div>
         }
         body={(e) => <div className="mx-auto">{e.activatedRules.length}</div>}
       />
       <Column
-        bodyClassName="metrics-view-new-facts-column"
-        headerClassName="metrics-view-new-facts-column text-center"
+        bodyClassName="metrics-view-new-facts-column metrics-table-content"
+        headerClassName="metrics-view-new-facts-column text-center metrics-table-header metrics-table-header-center"
         field="newFacts.length"
         header="Nowe fakty"
         body={(e) => <div className="mx-auto">{e.newFacts.length}</div>}
       />
+      {renderCountColumns()}
       <Column
-        bodyClassName="metrics-view-time-column"
-        headerClassName="metrics-view-time-column text-center"
+        bodyClassName="metrics-view-time-column metrics-table-content"
+        headerClassName="metrics-view-time-column text-center metrics-table-header metrics-table-header-center"
         field="totalTime"
-        header="Czas [ms]"
-        body={(e) => <div className="mx-auto">{e.totalTime}</div>}
+        header="Czas [s]"
+        body={(e) => <div className="mx-auto">{e.totalTimeSecond}</div>}
       />
-
       <Column
-        bodyClassName="metrics-view-color-column"
-        headerClassName="metrics-view-color-column text-center"
+        bodyClassName="metrics-view-color-column metrics-table-content"
+        headerClassName="metrics-view-color-column text-center metrics-table-header metrics-table-header-center"
         header="Kolor"
         body={(m) => (
           <div
@@ -136,9 +156,30 @@ const MetricsTable = (props) => {
           ></div>
         )}
       />
+
       <Column
-        bodyStyle={{ flex: `0 0 ${getButtonSectionWidth(props.buttons)}` }}
-        headerStyle={{ flex: `0 0 ${getButtonSectionWidth(props.buttons)}` }}
+        bodyClassName="metrics-view-color-column text-center metrics-table-content"
+        headerClassName="metrics-view-color-column metrics-table-header metrics-table-header-center"
+        header="Sukces"
+        body={(e) => (
+          <div className="w-full mx-auto">
+            <i
+              className={`pi pi-${
+                e.success ? "check text-green-500" : "times text-pink-400"
+              } `}
+            />
+          </div>
+        )}
+      />
+      <Column
+        bodyStyle={{
+          flex: `0 0 ${getButtonSectionWidth(props.buttons)}`,
+        }}
+        headerStyle={{
+          flex: `0 0 ${getButtonSectionWidth(props.buttons)}`,
+        }}
+        bodyClassName="metrics-view-buttons-column"
+        headerClassName="metrics-view-buttons-column metrics-table-header"
         body={(m) => (
           <div className="flex">{renderButtons(props.buttons, m)}</div>
         )}
@@ -148,6 +189,7 @@ const MetricsTable = (props) => {
 };
 
 MetricsTable.defaultProps = {
+  showGridlines: true,
   buttons: [],
 };
 

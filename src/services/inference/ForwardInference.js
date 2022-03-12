@@ -11,8 +11,11 @@ class ForwardInference extends Inference {
         activatedRule.newFactsExplainMethod
       );
       if (this.metrics.isGoalFulFilled()) {
-        break;
+        this.metrics.markAsSuccess();
       }
+    }
+    if (this.metrics.newFacts.length > 0) {
+      this.metrics.markAsSuccess();
     }
   };
 

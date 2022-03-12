@@ -1,71 +1,87 @@
-.metrics-view-date-column {
-  flex: 0 0 7rem !important;
-  padding: 0.5rem !important;
+:root {
+  --metrics-table-padding: 0.1rem;
+  --metrics-table-header-color: var(--surface-200);
 }
 
-.metrics-view-date-column .p-column-header-content {
+.metrics-table-header {
+  background: var(--metrics-table-header-color) !important;
+  cursor: default;
+}
+
+.metrics-table-content {
+  cursor: default;
+}
+
+.metrics-table-header-center .p-column-header-content {
   width: 100%;
 }
 
-.metrics-view-date-column .p-column-header-content span {
+.metrics-table-header-center .p-column-header-content span {
   width: 100%;
   text-align: center;
 }
 
+.metrics-view-date-column {
+  flex: 0 0 7rem !important;
+  padding: var(--metrics-table-padding) !important;
+}
+
 .metrics-view-select-column {
   flex: 0 0 1rem !important;
-  padding: 0.5rem !important;
+  padding: var(--metrics-table-padding) !important;
 }
 
 .metrics-view-name-column {
   flex: 0 0 1 !important;
-  padding: 0.5rem !important;
+  padding: var(--metrics-table-padding) !important;
+  padding-left: 0.5rem !important;
 }
 
 .metrics-view-iteration-column {
   flex: 0 0 5rem !important;
-  padding: 0.5rem !important;
+  padding: var(--metrics-table-padding) !important;
 }
 
 .metrics-view-matching-strategy-column {
   flex: 0 0 8.5rem !important;
-  padding: 0.5rem !important;
-}
-
-.metrics-view-matching-strategy-column .p-column-header-content {
-  width: 100%;
-}
-
-.metrics-view-matching-strategy-column .p-column-header-content span {
-  width: 100%;
+  padding: var(--metrics-table-padding) !important;
 }
 
 .metrics-view-type-column {
   flex: 0 0 3rem !important;
-  padding: 0.5rem !important;
+  padding: var(--metrics-table-padding) !important;
 }
 
 .metrics-view-checked-rules-column {
-  flex: 0 0 11rem !important;
-  padding: 0.5rem !important;
+  flex: 0 0 6.5rem !important;
+  padding: var(--metrics-table-padding) !important;
 }
 
 .metrics-view-activated-rules-column {
-  flex: 0 0 12rem !important;
-  padding: 0.5rem !important;
+  flex: 0 0 6.5rem !important;
+  padding: var(--metrics-table-padding) !important;
 }
 
 .metrics-view-new-facts-column {
   flex: 0 0 5rem !important;
-  padding: 0.5rem !important;
+  padding: var(--metrics-table-padding) !important;
 }
 
 .metrics-view-time-column {
-  flex: 0 0 7rem !important;
-  padding: 0.5rem !important;
+  flex: 0 0 4rem !important;
+  padding: var(--metrics-table-padding) !important;
 }
 
 .metrics-view-color-column {
   flex: 0 0 4rem !important;
-  padding: 0.5rem !important;
+  padding: var(--metrics-table-padding) !important;
+}
+
+.metrics-view-count-column {
+  flex: 0 0 7rem !important;
+  padding: var(--metrics-table-padding) !important;
+}
+
+.metrics-view-buttons-column {
+  padding: var(--metrics-table-padding) !important;
 }

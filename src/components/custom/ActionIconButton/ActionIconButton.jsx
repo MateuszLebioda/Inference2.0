@@ -20,7 +20,7 @@ ActionIconButton.defaultProps = {
 };
 
 export const getButtonSectionWidth = (buttons) => {
-  return `calc(35px + ${buttons.length * 35}px)`;
+  return `calc(${buttons.length * 35}px)`;
 };
 
 export const renderButtons = (button, element, key = null) => {

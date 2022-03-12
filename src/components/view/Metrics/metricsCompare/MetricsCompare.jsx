@@ -37,6 +37,7 @@ const MetricsCompare = (props) => {
     >
       <AccordionTab header={`Wybierz metryki: ${selected.length}`}>
         <MetricsTable
+          showGridlines={false}
           scrollHeight="calc(100vh - 280px)"
           selection={selected}
           onSelect={(e) => setSelected(e)}

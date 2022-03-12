@@ -53,7 +53,6 @@ const Navbar = (props) => {
       icon: "pi pi-fw pi-file",
       items: [
         {
-          icon: "pi pi-download",
           template: (
             <div className="file-upload-hover">
               <FileUpload
@@ -61,7 +60,7 @@ const Navbar = (props) => {
                 mode="basic"
                 onSelect={(e) => handleOpenFile(e)}
                 auto
-                chooseLabel="Importuj"
+                chooseOptions={{ label: "Importuj", icon: "pi pi-file" }}
               />
             </div>
           ),

@@ -2,7 +2,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { OrganizationChart } from "primereact/organizationchart";
-import DependencyService from "../../../../../services/dependency/DependencyService";
 import "./ExplainChar.css";
 import {
   buttonTemplate,
@@ -18,13 +17,15 @@ const ExplainChar = (props) => {
     }
   }, [props.fact]);
 
-  const mapForwardExplainModelToCharModel = (fact) => {
+  const mapForwardExplainModelToCharModel = (explainModel) => {
     let factDetails = {
-      ...DependencyService.getCompleteFact(fact.fact),
-      ruleId: fact.rule ? fact.rule.ruleId : -1,
+      ...explainModel.fact,
+      ruleId: explainModel.rule ? explainModel.rule.ruleId : -1,
     };
-    let children = fact.rule
-      ? fact.rule.conditions.map((f) => mapForwardExplainModelToCharModel(f))
+    let children = explainModel.rule
+      ? explainModel.rule.conditions.map((f) =>
+          mapForwardExplainModelToCharModel(f)
+        )
       : [];
     return {
       ...factDetails,
@@ -58,7 +59,7 @@ const ExplainChar = (props) => {
             <strong>{e.type}</strong>
           </div>
           <div className="flex p-2">
-            <div className="my-auto m-2">{e.attributeName}</div>
+            <div className="my-auto m-2">{e.name}</div>
             <div className="my-auto m-2">{e.operator}</div>
             <div className="my-auto m-2">{e.value}</div>
           </div>
