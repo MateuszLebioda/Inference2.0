@@ -53,6 +53,7 @@ class FactService {
 
   mapEditFactToFact = (fact) => {
     let {
+      id,
       errors,
       warnings,
       defaultAttributeID,

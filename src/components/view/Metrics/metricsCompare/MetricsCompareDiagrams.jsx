@@ -1,8 +1,31 @@
 import { TabView, TabPanel } from "primereact/tabview";
 import { useState } from "react";
-import { Chart } from "primereact/chart";
 import "./MetricsCompare.css";
 import { RGBColorToHex } from "../../../../services/tools/RGBColorToHex";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  PointElement,
+  LineElement,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LineElement,
+  PointElement,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const MetricsCompareDiagrams = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -16,7 +39,6 @@ const MetricsCompareDiagrams = (props) => {
         {
           label: title,
           data: props.metrics.map((m) => mapFn(m)),
-          fill: false,
           backgroundColor: props.metrics.map((m) =>
             rgbToHex.colorToHex(m.color)
           ),
@@ -25,10 +47,26 @@ const MetricsCompareDiagrams = (props) => {
     };
   };
 
-  const options = {
+  const defaultOptions = {
     plugins: {
       legend: {
         position: "none",
+      },
+    },
+  };
+
+  const optionsSuccess = {
+    plugins: {
+      legend: {
+        position: "none",
+      },
+    },
+    scales: {
+      y: {
+        type: "category",
+        labels: ["Tak", "Nie"],
+        stackWeight: 1,
+        offset: true,
       },
     },
   };
@@ -47,10 +85,6 @@ const MetricsCompareDiagrams = (props) => {
       fn: (m) => m.activatedRules.length,
     },
     {
-      name: "Początkowe fakty",
-      fn: (m) => m.startFacts.length,
-    },
-    {
       name: "Nowe fakty",
       fn: (m) => m.newFacts.length,
     },
@@ -59,20 +93,40 @@ const MetricsCompareDiagrams = (props) => {
       fn: (m) => m.iterations,
     },
     {
-      name: "Hipotezy pośrednie",
-      fn: (m) => (m.indirectHypothesis ? m.indirectHypothesis.length : 0),
+      name: "Faktów początkowych",
+      fn: (m) => m.factCount,
+    },
+    {
+      name: "Reguł początkowych",
+      fn: (m) => m.ruleCount,
+    },
+    {
+      name: "Atrybutów początkowych",
+      fn: (m) => m.attributeCount,
+    },
+    {
+      name: "Sukces",
+      fn: (m) => (m.success ? "Tak" : "Nie"),
+      options: optionsSuccess,
     },
   ];
 
-  const getTabPanel = ({ name, fn, type = "bar" }) => {
+  const getTabPanel = ({ name, fn, options, type = "bar" }) => {
     return (
       <TabPanel header={name}>
-        <Chart
-          className="metrics-char-content-style"
-          type={type}
-          data={prepareData((m) => fn(m))}
-          options={options}
-        />
+        <div className="metrics-char-content-style">
+          {!options ? (
+            <Bar
+              data={prepareData((m) => fn(m))}
+              options={options ? options : defaultOptions}
+            />
+          ) : (
+            <Line
+              data={prepareData((m) => fn(m))}
+              options={options ? options : defaultOptions}
+            />
+          )}
+        </div>
       </TabPanel>
     );
   };
@@ -83,24 +137,6 @@ const MetricsCompareDiagrams = (props) => {
       onTabChange={(e) => setActiveIndex(e.index)}
     >
       {panels.map((p) => getTabPanel(p))}
-      {/* <TabPanel header="Całkowity czas">
-        <Chart
-          className="metrics-char-content-style"
-          type="bar"
-          data={prepareData(
-            (m) => m.totalTimeSecond,
-            "Całkowity czas w milisekundach"
-          )}
-          options={options}
-        />
-      </TabPanel>
-      {getTabPanel("Całkowity czas w milisekundach", (m) => m.totalTimeSecond)}
-      <TabPanel header="Sprawdzone reguły"></TabPanel>
-      <TabPanel header="Aktywowane reguły"></TabPanel>
-      <TabPanel header="Początkowe fakty"></TabPanel>
-      <TabPanel header="Nowe fakty"></TabPanel>
-      <TabPanel header="Iteracje"></TabPanel>
-      <TabPanel header="Hipotezy pośrednie"></TabPanel> */}
     </TabView>
   );
 };

@@ -1,10 +1,13 @@
+import { FilterMatchMode } from "primereact/api";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   getButtonSectionWidth,
   renderButtons,
 } from "../../custom/ActionIconButton/ActionIconButton";
+import EmptyTableMessage from "../../custom/EmptyTableMessage/EmptyTableMessage";
 import GlobalFilter from "../../custom/GlobalFilter/GlobalFIlter";
 import MenuButton from "../../custom/MenuButton/MenuButton";
 import "./MetricsTable.css";
@@ -12,12 +15,24 @@ import "./MetricsTable.css";
 const MetricsTable = (props) => {
   const metics = useSelector((state) => state.file.value.metrics);
 
+  const [filters, setFilters] = useState({
+    global: { value: "", matchMode: FilterMatchMode.CONTAINS },
+  });
+
   const renderHeader = () => {
     return (
       <div className="flex justify-content-between text-xl">
         <div className="mx-auto">Lista Metryk</div>
         <div className="flex">
-          <GlobalFilter />
+          <GlobalFilter
+            value={filters.global.value}
+            changeValue={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                global: { ...prev.global, value: e },
+              }))
+            }
+          />
           {props.menuItems && <MenuButton menuItems={props.menuItems} />}
         </div>
       </div>
@@ -42,7 +57,7 @@ const MetricsTable = (props) => {
 
   return (
     <DataTable
-      showGridlines={props.showGridlines}
+      showGridlines={metics.length === 0 ? false : props.showGridlines}
       header={renderHeader()}
       className={`row-padding ${props.className}`}
       paginator={metics.length > 0}
@@ -58,6 +73,8 @@ const MetricsTable = (props) => {
       onSelectionChange={(e) => {
         props.onSelect(e.value);
       }}
+      filters={filters}
+      emptyMessage={<EmptyTableMessage value="Metryk" />}
     >
       {props.selection && (
         <Column

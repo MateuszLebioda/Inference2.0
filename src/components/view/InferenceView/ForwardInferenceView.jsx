@@ -22,7 +22,6 @@ const ForwardInferenceView = (props) => {
     goal,
     matchingStrategy
   ) => {
-    setBlock(true);
     let metrics = new ForwardMetrics(
       name,
       colorValue,
@@ -44,6 +43,7 @@ const ForwardInferenceView = (props) => {
       historyMessage="Wnioskowanie w przód"
       onInferenceStart={handleInferenceStart}
       blocking={block}
+      block={() => setBlock(true)}
     />
   );
 };

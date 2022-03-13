@@ -18,10 +18,7 @@ const Content = () => {
         <Route path="/inference/forward" component={ForwardInferenceView} />
         <Route path="/inference/backward" component={BackwardInferenceView} />
         <Route path="/metrics/preview" component={MetricsPreview} />
-        <Route
-          path="/metrics/compare/:metricsIds?"
-          component={MetricsCompare}
-        />
+        <Route path="/metrics/compare/" component={MetricsCompare} />
         <Route path="/" component={AttributeView} />
       </Switch>
     </Router>

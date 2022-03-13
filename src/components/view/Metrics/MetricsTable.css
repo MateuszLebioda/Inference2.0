@@ -29,6 +29,7 @@
 .metrics-view-select-column {
   flex: 0 0 1rem !important;
   padding: var(--metrics-table-padding) !important;
+  padding-left: 1rem !important;
 }
 
 .metrics-view-name-column {
@@ -84,4 +85,13 @@
 
 .metrics-view-buttons-column {
   padding: var(--metrics-table-padding) !important;
+}
+
+.p-highlight {
+  background: var(--surface-400) !important;
+  color: black !important;
+}
+
+.p-paginator-element {
+  color: black !important;
 }

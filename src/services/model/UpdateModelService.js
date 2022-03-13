@@ -204,6 +204,39 @@ class UpdateModelService {
     return Promise.resolve(attribute);
   };
 
+  clearMetrics = () => {
+    store.dispatch(
+      updateElement({
+        metrics: [],
+        attributes: [...store.getState().file.value.attributes],
+        facts: [...store.getState().file.value.facts],
+        rules: [...store.getState().file.value.rules],
+      })
+    );
+  };
+
+  clearKnowledgeBase = () => {
+    store.dispatch(
+      updateElement({
+        attributes: [],
+        facts: [],
+        rules: [],
+        metrics: [...store.getState().file.value.metrics],
+      })
+    );
+  };
+
+  clearKnowledgeBaseAndMetrics = () => {
+    store.dispatch(
+      updateElement({
+        attributes: [],
+        facts: [],
+        rules: [],
+        metrics: [],
+      })
+    );
+  };
+
   getFactWithRemovedAttributes = (facts, dependency) => {
     let removedFactsId = [];
 

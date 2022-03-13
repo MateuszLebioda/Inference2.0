@@ -12,6 +12,8 @@ import { updateElement } from "../../slice/FileSlice";
 import history from "../../services/history";
 import { Chip } from "primereact/chip";
 import { saveAs } from "file-saver";
+import { useState } from "react";
+import ConfirmRemoveKnowledgeBase from "./ConfirmRemoveKnowledgeBase";
 
 const Navbar = (props) => {
   const historySlice = useSelector((state) => state.history);
@@ -19,8 +21,10 @@ const Navbar = (props) => {
   const importerFactory = ImporterFactory;
   const dispatch = useDispatch();
 
+  const [clearKnowledgeBaseDialog, setClearKnowledgeBaseDialog] =
+    useState(false);
+
   const handleOpenFile = (e) => {
-    dispatch(blockUiWithMessage(START_IMPORT));
     let reader = new FileReader();
     reader.onload = (file) => {
       let type = file.target.result.includes('"importType": "Inference2.0"')
@@ -30,8 +34,10 @@ const Navbar = (props) => {
       const importer = importerFactory.getImporter(type);
 
       importer.importFromFile(data).then((r) => {
-        dispatch(updateElement(r));
-        dispatch(unBlockUi());
+        setTimeout(() => {
+          dispatch(updateElement(r));
+          dispatch(unBlockUi());
+        }, 100);
       });
     };
     reader.readAsText(e.files[0], "UTF-8");
@@ -47,6 +53,32 @@ const Navbar = (props) => {
     saveAs(blob, "Inference.json");
   };
 
+  const Labels = [
+    {
+      value: "Atrybuty",
+      icon: "pi pi-home",
+      command: () => history.push("/attributes"),
+    },
+    {
+      value: "Fakty",
+      icon: "pi pi-search",
+      command: () => history.push("/facts"),
+    },
+    {
+      value: "Reguły",
+      icon: "pi-question-circle",
+      command: () => history.push("/rules"),
+    },
+    { separator: true },
+    {
+      icon: "pi pi-trash",
+      value: "Wyczyść bazę wiedzy",
+      command: () => {
+        setClearKnowledgeBaseDialog(true);
+      },
+    },
+  ];
+
   const items = [
     {
       label: "Plik",
@@ -58,13 +90,17 @@ const Navbar = (props) => {
               <FileUpload
                 className="file-upload-clear-style"
                 mode="basic"
-                onSelect={(e) => handleOpenFile(e)}
+                onSelect={(e) => {
+                  dispatch(blockUiWithMessage(START_IMPORT));
+                  handleOpenFile(e);
+                }}
                 auto
                 chooseOptions={{ label: "Importuj", icon: "pi pi-file" }}
               />
             </div>
           ),
         },
+
         {
           icon: "pi pi-save",
           label: "Zapisz",
@@ -73,15 +109,17 @@ const Navbar = (props) => {
       ],
     },
     {
-      label: "Dane",
+      label: "Baza wiedzy",
       icon: "pi pi-map",
-      items: Labels.map((l) => {
-        return {
-          label: l.value,
-          icon: `pi ${l.icon}`,
-          command: l.command,
-        };
-      }),
+      items: Labels.map((l) =>
+        l.separator
+          ? { separator: true }
+          : {
+              label: l.value,
+              icon: `pi ${l.icon}`,
+              command: l.command,
+            }
+      ),
     },
     {
       label: "Wnioskuj",
@@ -124,29 +162,15 @@ const Navbar = (props) => {
   return (
     <>
       <Menubar model={items} end={endTemplate} />
+      <ConfirmRemoveKnowledgeBase
+        visible={clearKnowledgeBaseDialog}
+        setVisible={(e) => setClearKnowledgeBaseDialog(e)}
+      />
     </>
   );
 };
 
 export default Navbar;
-
-const Labels = [
-  {
-    value: "Atrybuty",
-    icon: "pi pi-home",
-    command: () => history.push("/attributes"),
-  },
-  {
-    value: "Fakty",
-    icon: "pi pi-search",
-    command: () => history.push("/facts"),
-  },
-  {
-    value: "Reguły",
-    icon: "pi-question-circle",
-    command: () => history.push("/rules"),
-  },
-];
 
 const inference = [
   {

@@ -28,7 +28,6 @@ const BackwardInferenceView = (props) => {
       goal,
       matchingStrategy
     );
-    setBlock(true);
     backwardInference.inference(metrics).then((r) => {
       let newMetrics = r.toPojo();
       dispatch(addMetrics({ metrics: newMetrics }));
@@ -43,6 +42,7 @@ const BackwardInferenceView = (props) => {
       historyMessage="Wnioskowanie w tył"
       onInferenceStart={handleInferenceStart}
       blocking={block}
+      block={() => setBlock(true)}
       goalMandatory
     />
   );

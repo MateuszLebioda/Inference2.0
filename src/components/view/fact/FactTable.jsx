@@ -10,6 +10,7 @@ import AttributeTypeTemplate from "../../custom/AttributeTypeTemplate/AttributeT
 import AttributeTypeDropdown from "../../custom/AttributeTypeDropdown/AttributeTypeDropdown";
 import DependencyService from "../../../services/dependency/DependencyService";
 import MenuButton from "../../custom/MenuButton/MenuButton";
+import EmptyTableMessage from "../../custom/EmptyTableMessage/EmptyTableMessage";
 
 const FactTable = (props) => {
   const [completeFacts, setCompleteFacts] = useState([]);
@@ -103,6 +104,7 @@ const FactTable = (props) => {
         delete tempFact.attributeName;
         props.onSelect(tempFact);
       }}
+      emptyMessage={<EmptyTableMessage value="Faktów" />}
     >
       {props.selection && (
         <Column

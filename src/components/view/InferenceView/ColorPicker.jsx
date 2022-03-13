@@ -1,12 +1,16 @@
 import { RadioButton } from "primereact/radiobutton";
 import { ColorPicker } from "primereact/colorpicker";
+import "./Picker.css";
 
 const ColorPickerTemplate = (props) => {
   return (
     <div>
       <div className="flex">
         <h5 className="text-xl my-auto w-5rem">Kolor:</h5>
-        <div style={{ margin: props.margin }}>
+        <div
+          style={{ margin: props.margin }}
+          className="row-picker-option-width"
+        >
           <RadioButton
             inputId="allFacts"
             name="Wszystkie"
@@ -19,7 +23,10 @@ const ColorPickerTemplate = (props) => {
           </label>
         </div>
 
-        <div style={{ margin: props.margin }}>
+        <div
+          style={{ margin: props.margin }}
+          className="row-picker-option-width"
+        >
           <RadioButton
             inputId="selectFacts"
             name="selectFacts"

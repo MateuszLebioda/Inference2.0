@@ -4,3 +4,10 @@
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
+
+.rule-edit-grid-container-display {
+  display: grid;
+  grid-template-columns: 1fr 7rem 1fr;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}

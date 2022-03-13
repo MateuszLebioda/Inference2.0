@@ -8,6 +8,8 @@ import { deleteButton } from "../../custom/ActionIconButton/ActionIconButton";
 import ExplainForwardDialog from "../../custom/Dialog/ExplainForwardDialog/ExplainForwardDialog";
 import MetricsTable from "./MetricsTable";
 import { MetricsParser } from "../../../model/metrics/MetricsParser";
+import UpdateModelService from "../../../services/model/UpdateModelService";
+import { confirmDialog } from "primereact/confirmdialog";
 
 const MetricsPreview = (props) => {
   const dispatch = useDispatch();
@@ -66,6 +68,24 @@ const MetricsPreview = (props) => {
       icon: "pi pi-file",
       label: "Zapisz jako .csv",
       command: () => metricsParser.exportToCsv(metics),
+      disabled: metics.length === 0,
+    },
+    { separator: true },
+    {
+      icon: "pi pi-trash",
+      label: "Wyczyść metryki",
+      command: () =>
+        confirmDialog({
+          header: "Czyszczenie metryk",
+          message: "Czy na pewno chcesz usunąć wszystkie metryki?",
+          icon: "pi pi-trash",
+          acceptClassName: "p-button-danger",
+          acceptLabel: "Tak",
+          rejectLabel: "Nie",
+          style: { width: "400px" },
+          accept: () => new UpdateModelService().clearMetrics(),
+          reject: () => {},
+        }),
       disabled: metics.length === 0,
     },
   ];

@@ -1,0 +1,12 @@
+:root {
+  --row-picker-width: 8rem;
+  --row-picker-header-width: 5rem;
+}
+
+.row-picker-option-width {
+  width: var(--row-picker-width);
+}
+
+.row-picker-header-width {
+  width: var(--row-picker-header-width);
+}

@@ -12,9 +12,10 @@ class ForwardInference extends Inference {
       );
       if (this.metrics.isGoalFulFilled()) {
         this.metrics.markAsSuccess();
+        break;
       }
     }
-    if (this.metrics.newFacts.length > 0) {
+    if (!this.metrics.goal && this.metrics.newFacts.length > 0) {
       this.metrics.markAsSuccess();
     }
   };

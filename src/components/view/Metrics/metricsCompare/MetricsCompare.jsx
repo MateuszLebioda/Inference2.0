@@ -10,10 +10,10 @@ import MetricsCompareDiagrams from "./MetricsCompareDiagrams";
 const MetricsCompare = (props) => {
   const dispatch = useDispatch();
 
-  const [selected, setSelected] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(0);
-
   const metics = useSelector((state) => state.file.value.metrics);
+
+  const [selected, setSelected] = useState(metics);
+  const [activeIndex, setActiveIndex] = useState(1);
 
   useEffect(() => {
     dispatch(changeHistory("Porównanie metryk"));
@@ -32,8 +32,11 @@ const MetricsCompare = (props) => {
 
   return (
     <Accordion
+      className="accordion-style"
       activeIndex={activeIndex}
-      onTabChange={(e) => setActiveIndex(e.index)}
+      onTabChange={(e) => {
+        setActiveIndex(e.index != null ? e.index : 1);
+      }}
     >
       <AccordionTab header={`Wybierz metryki: ${selected.length}`}>
         <MetricsTable

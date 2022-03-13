@@ -74,21 +74,18 @@ class DependencyService {
     let facts = [...store.getState().file.value.facts];
     let rules = [...store.getState().file.value.rules];
 
-    for (let fact of facts) {
-      if (attribute.id === fact.attributeID) {
-        return true;
-      }
+    if (facts.some((f) => f.attributeID === attribute.id)) {
+      return true;
     }
 
-    for (let rule of rules) {
-      if (attribute.id === rule.conclusion.attributeID) {
-        return true;
-      }
-      for (let condition of rule.conditions) {
-        if (attribute.id === condition.attributeID) {
-          return true;
-        }
-      }
+    if (
+      rules.some(
+        (r) =>
+          r.conclusion.attributeID === attribute.id ||
+          r.conditions.some((c) => c.attributeID === attribute.id)
+      )
+    ) {
+      return true;
     }
 
     return false;

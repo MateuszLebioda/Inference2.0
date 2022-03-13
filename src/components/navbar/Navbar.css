@@ -23,3 +23,24 @@
 .file-upload-hover :hover {
   background: #e9ecef;
 }
+
+.confirm-remove-base-select-yes .p-button {
+  background: var(--surface-b) !important;
+  color: black !important;
+}
+
+.confirm-remove-base-select-yes .p-highlight {
+  background: var(--green-600) !important;
+  color: white !important;
+}
+
+.confirm-remove-base-select-no .p-button {
+  background: var(--surface-b) !important;
+
+  color: black !important;
+}
+
+.confirm-remove-base-select-no .p-highlight {
+  background: red !important;
+  color: white !important;
+}

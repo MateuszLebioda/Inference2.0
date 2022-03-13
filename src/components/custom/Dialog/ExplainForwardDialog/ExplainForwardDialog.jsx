@@ -1,8 +1,8 @@
 import { Dialog } from "primereact/dialog";
 import { useEffect, useState } from "react";
 import { inferenceType } from "../../../../model/metrics/InferenceType";
+import RulePreviewDialog from "../../../view/rules/RulePreviewDialog/RulePreviewDialog";
 import FactDropdown from "../../FactDropddown/FactDropdown";
-import RulePreviewDialog from "../../RulePreviewDialog/RulePreviewDialog";
 import ExplainChar from "./ExplainChar/ExplainChar";
 
 const ExplainForwardDialog = (props) => {

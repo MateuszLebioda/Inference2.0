@@ -26,6 +26,7 @@ import AttributeTypeDropdown from "../../custom/AttributeTypeDropdown/AttributeT
 import GlobalFilter from "../../custom/GlobalFilter/GlobalFIlter";
 import MenuButton from "../../custom/MenuButton/MenuButton";
 import { v4 } from "uuid";
+import EmptyTableMessage from "../../custom/EmptyTableMessage/EmptyTableMessage";
 
 const AttributeView = () => {
   const updateModelService = new UpdateModelService();
@@ -189,6 +190,7 @@ const AttributeView = () => {
           key={v4()}
           icon="pi-lock"
           tooltip={DEPENDENT_ATTRIBUTE.value}
+          tooltipPosition="left"
         />
       );
     }
@@ -217,6 +219,7 @@ const AttributeView = () => {
         scrollable
         scrollHeight="calc(100vh - 170px)"
         filters={filters}
+        emptyMessage={<EmptyTableMessage value="Atrybutów" />}
       >
         <Column
           bodyClassName="attribute-view-type-column"

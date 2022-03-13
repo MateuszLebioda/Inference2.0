@@ -31,6 +31,7 @@ import "./AttributeEditDialog.css";
 import { Toast } from "primereact/toast";
 import { Menu } from "primereact/menu";
 import AttributeTypeDropdown from "../../custom/AttributeTypeDropdown/AttributeTypeDropdown";
+import EmptyTableMessage from "../../custom/EmptyTableMessage/EmptyTableMessage";
 
 const AttributeEditDialog = (props) => {
   const attributeService = new AttributeService();
@@ -320,6 +321,9 @@ const AttributeEditDialog = (props) => {
               header={renderHeader()}
               headerStyle={{ padding: "5px" }}
               className="disable-header padding-header"
+              emptyMessage={
+                <EmptyTableMessage value="Wartości" minWidth="10vw" />
+              }
             >
               <Column
                 field="value"

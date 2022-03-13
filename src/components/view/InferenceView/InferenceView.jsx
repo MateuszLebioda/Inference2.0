@@ -109,13 +109,16 @@ const InferenceView = forwardRef((props, ref) => {
             label="Rozpocznij"
             icon="pi pi-cog"
             onClick={() => {
-              props.onInferenceStart(
-                name,
-                color.value,
-                !allFacts && selectedFacts,
-                goal,
-                matchingStrategy
-              );
+              props.block();
+              setTimeout(() => {
+                props.onInferenceStart(
+                  name,
+                  color.value,
+                  !allFacts && selectedFacts,
+                  goal,
+                  matchingStrategy
+                );
+              }, 100);
             }}
           />
         </div>

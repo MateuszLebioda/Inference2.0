@@ -19,6 +19,7 @@ const App = () => {
     <>
       <BlockUI
         blocked={blockUI.value}
+        // blocked={true}
         fullScreen
         template={
           <div>

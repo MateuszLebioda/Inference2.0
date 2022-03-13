@@ -1,5 +1,7 @@
 {
-  "name": "inference",
+  "name": "Inference",
+  "author": "Mateusz Lebioda",
+  "description": "Application to inference",
   "version": "0.1.0",
   "private": true,
   "main": "public/electronStart.js",
@@ -11,7 +13,8 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "array-shuffle": "^3.0.0",
-    "chart.js": "^3.6.2",
+    "chart.js": "^3.7.1",
+    "electron-devtools-installer": "^3.2.0",
     "electron-is-dev": "^2.0.0",
     "export-to-csv": "^0.2.1",
     "file-saver": "^2.0.5",
@@ -20,6 +23,7 @@
     "primeicons": "^5.0.0",
     "primereact": "^7.1.0",
     "react": "^17.0.2",
+    "react-chartjs-2": "^4.0.1",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.3.0",
@@ -31,12 +35,15 @@
     "xlsx": "^0.18.3"
   },
   "scripts": {
+    "serve": "npm run build && serve -s .\\build\\",
     "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject",
     "electron": "electron .",
     "electron:build": "npm run build && electron-builder -c.extraMetadata.main=build/electronStart.js",
+    "electron:build-linux": "npm run build && electron-builder -l -c.extraMetadata.main=build/electronStart.js",
+    "electron:build-mwl": "npm run electron-builder -mwl -c.extraMetadata.main=build/electronStart.js ",
     "electron:serve": "concurrently \"npm run start\" \"wait-on http://127.0.0.1:3000/ && electron .\""
   },
   "eslintConfig": {

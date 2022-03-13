@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { FilterService } from "primereact/api";
 import { Column } from "primereact/column";
 import { confirmDialog } from "primereact/confirmdialog";
 import { DataTable } from "primereact/datatable";
-import { InputText } from "primereact/inputtext";
 import { Menu } from "primereact/menu";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,10 @@ import ActionIconButton, {
   getButtonSectionWidth,
 } from "../../custom/ActionIconButton/ActionIconButton";
 import AndTemplate from "../../custom/AndTemplate/AndTemplate";
+import EmptyTableMessage from "../../custom/EmptyTableMessage/EmptyTableMessage";
+import GlobalFilter from "../../custom/GlobalFilter/GlobalFIlter";
 import IfTemplate from "../../custom/IfTemplate/IfTemplate";
+import MenuButton from "../../custom/MenuButton/MenuButton";
 import ThenTemplate from "../../custom/ThenTemplate/ThenTemplate";
 import RuleDisplay from "./RuleDisplay";
 import RuleEditDialog from "./RuleEditDialog/RuleEditDialog";
@@ -22,9 +25,29 @@ import "./RuleView.css";
 const RuleView = (props) => {
   const rules = useSelector((state) => state.file.value.rules);
 
+  FilterService.register("ruleFilter", (field, filter) => {
+    if (filter === null) {
+      return true;
+    }
+    filter = filter.toLowerCase();
+    if (Array.isArray(field)) {
+      return field.some(
+        (condition) =>
+          condition.attributeName.toLowerCase().includes(filter) ||
+          condition.value.toLowerCase().includes(filter)
+      );
+    } else if (field !== null) {
+      return field.attributeName.toLowerCase().includes(filter);
+    }
+    return false;
+  });
+
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: "ruleFilter" },
+  });
+
   const updateModelService = new UpdateModelService();
 
-  const [globalFilter, setGlobalFilter] = useState("");
   const [completeRule, setCompleteRule] = useState([]);
   const [ruleEditDialog, setRuleEditDialog] = useState({
     visible: false,
@@ -95,21 +118,18 @@ const RuleView = (props) => {
     return (
       <div className="space-between" style={{ fontSize: "17px" }}>
         <div style={{ margin: "auto" }}>Lista Reguł</div>
-        <span className="p-input-icon-left">
-          <i className="pi pi-search" />
-          <InputText
-            type="search"
-            onInput={(e) => setGlobalFilter(e.target.value)}
-            placeholder="Wyszukaj..."
+        <span className="flex">
+          <GlobalFilter
+            value={filters.global.value}
+            changeValue={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                global: { ...prev.global, value: e },
+              }))
+            }
           />
 
-          <ActionIconButton
-            tooltip="Więcej..."
-            tooltipPosition="left"
-            icon="pi-ellipsis-v"
-            className="p-button-secondary"
-            action={(event) => menu.current.toggle(event)}
-          />
+          <MenuButton menuItems={menuItems} />
         </span>
       </div>
     );
@@ -160,7 +180,8 @@ const RuleView = (props) => {
         rows={25}
         value={completeRule}
         header={renderHeader()}
-        globalFilter={globalFilter}
+        filters={filters}
+        emptyMessage={<EmptyTableMessage value="Reguł" />}
       >
         <Column
           bodyClassName="rule-view-if-column"
@@ -172,17 +193,19 @@ const RuleView = (props) => {
           bodyClassName="rule-view-conditions-column"
           headerClassName="rule-view-conditions-column"
           header="Warunki"
+          field="conditions"
           body={(a) => getConditionTemplate(a)}
         />
         <Column
           bodyClassName="rule-view-then-column"
           headerClassName="rule-view-then-column"
-          body={(a) => <ThenTemplate />}
+          body={() => <ThenTemplate />}
         />
         <Column
           bodyClassName="rule-view-conclusion-column"
           headerClassName="rule-view-conclusion-column"
           header="Konkluzja"
+          field="conclusion"
           body={(a) => <RuleDisplay rule={a.conclusion} />}
         />
         <Column

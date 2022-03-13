@@ -1,5 +1,6 @@
 import { saveAs } from "file-saver";
 import { ExportToCsv } from "export-to-csv";
+import { utils, write } from "xlsx";
 
 export class MetricsParser {
   prepareMetricToTable = (metrics) => {
@@ -22,27 +23,25 @@ export class MetricsParser {
   };
 
   parseToExcel = (metrics) => {
-    import("xlsx").then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(
-        metrics.map((m) => this.prepareMetricToTable(m))
-      );
+    const worksheet = utils.json_to_sheet(
+      metrics.map((m) => this.prepareMetricToTable(m))
+    );
 
-      const workbook = {
-        Sheets: { "Metryki - Inference 2.0": worksheet },
-        SheetNames: ["Metryki - Inference 2.0"],
-      };
+    const workbook = {
+      Sheets: { "Metryki - Inference 2.0": worksheet },
+      SheetNames: ["Metryki - Inference 2.0"],
+    };
 
-      const excelBuffer = xlsx.write(workbook, {
-        bookType: "xlsx",
-        type: "array",
-      });
-      let EXCEL_TYPE =
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-      const data = new Blob([excelBuffer], {
-        type: EXCEL_TYPE,
-      });
-      saveAs(data, "Metrics.xlsx");
+    const excelBuffer = write(workbook, {
+      bookType: "xlsx",
+      type: "array",
     });
+    let EXCEL_TYPE =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const data = new Blob([excelBuffer], {
+      type: EXCEL_TYPE,
+    });
+    saveAs(data, "Metrics.xlsx");
   };
 
   exportToCsv = (metric) => {
@@ -64,18 +63,21 @@ export class MetricsParser {
   };
 
   parseToJson = (metrics) => {
-    const blob = new Blob(
-      [
-        JSON.stringify(
-          { ...metrics, importType: "Metryki - Inference 2.0" },
-          null,
-          1
-        ),
-      ],
+    let metricsString = JSON.stringify(
       {
-        type: "application/json",
-      }
+        metrics: metrics,
+        attributes: [],
+        rules: [],
+        facts: [],
+        importType: "Inference2.0",
+      },
+      null,
+      1
     );
+
+    const blob = new Blob([metricsString], {
+      type: "application/json",
+    });
     saveAs(blob, "Metrics.json");
   };
 }

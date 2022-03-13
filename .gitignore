@@ -19,7 +19,7 @@
 .env.production.local
 
 /inference-win32-x64/*
-/dist/* 
+/dist 
 
 npm-debug.log*
 yarn-debug.log*

@@ -4,24 +4,25 @@ import FactEditor from "../../custom/FactEditor/FactEditor";
 const GoalPicker = (props) => {
   const factEditTemplate = () => {
     return (
-      <div className="flex justify-content-center">
-        <FactEditor
-          style={{ maxWidth: "80vw" }}
-          className="w-full"
-          fact={props.goal}
-          updateFact={(e) => {
-            props.setGoal({ ...e, operator: operator.EQUALS });
-          }}
-        />
-      </div>
+      <FactEditor
+        style={{ maxWidth: "80vw" }}
+        className="w-full pt-2"
+        fact={props.goal}
+        updateFact={(e) => {
+          props.setGoal({ ...e, operator: operator.EQUALS });
+        }}
+      />
     );
   };
 
   return (
-    <div className="mb-2">
+    <div className="mb-2 flex">
       <div className="flex">
-        <h5 className="text-xl my-auto w-5rem">Cel:</h5>
-        <div style={{ margin: props.margin }}>
+        <h5 className="text-xl my-auto row-picker-header-width">Cel:</h5>
+        <div
+          style={{ margin: props.margin }}
+          className="row-picker-option-width"
+        >
           <RadioButton
             disabled={props.mandatory}
             inputId="allFacts"
@@ -35,7 +36,10 @@ const GoalPicker = (props) => {
           </label>
         </div>
 
-        <div style={{ margin: props.margin }}>
+        <div
+          style={{ margin: props.margin }}
+          className="row-picker-option-width"
+        >
           <RadioButton
             disabled={props.mandatory}
             inputId="withoutGoal"
@@ -45,11 +49,13 @@ const GoalPicker = (props) => {
             checked={props.mandatory ? true : !props.withoutGoal}
           />
           <label htmlFor="selectFacts" className="ml-2">
-            Wybierz cel
+            Wybierz cel:
           </label>
         </div>
       </div>
-      {(props.mandatory ? true : !props.withoutGoal) && factEditTemplate()}
+      <div className="w-full mr-2 flex-column justify-center">
+        {(props.mandatory ? true : !props.withoutGoal) && factEditTemplate()}
+      </div>
     </div>
   );
 };
