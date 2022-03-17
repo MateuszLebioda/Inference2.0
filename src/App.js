@@ -11,6 +11,7 @@ import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 import { addLocale, locale } from "primereact/api";
 import { PL_LOCALE } from "./locale";
 import Content from "./components/view/Content";
+import ErrorBoundary from "./components/view/errorBoundary/ErrorBoundary";
 const App = () => {
   const blockUI = useSelector((state) => state.block);
   addLocale("pl", PL_LOCALE);
@@ -29,7 +30,9 @@ const App = () => {
         }
       />
       <Navbar />
-      <Content />
+      <ErrorBoundary>
+        <Content />
+      </ErrorBoundary>
     </>
   );
 };
