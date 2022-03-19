@@ -56,11 +56,13 @@ const MetricsCompareDiagrams = (props) => {
   };
 
   const optionsSuccess = {
-    plugins: {
-      legend: {
-        position: "none",
+    plugins: [
+      {
+        legend: {
+          position: "none",
+        },
       },
-    },
+    ],
     scales: {
       y: {
         type: "category",

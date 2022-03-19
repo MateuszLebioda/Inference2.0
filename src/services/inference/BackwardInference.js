@@ -3,10 +3,16 @@ import { Inference } from "./Inference";
 
 export class BackwardInference extends Inference {
   inferenceImplementation = () => {
-    let goalProve = this.proveFact(this.metrics.goal);
-    if (goalProve) {
-      this.metrics.newFacts.push(goalProve.proves);
+    let factProve = this.tryFindGoalInFacts();
+    if (factProve) {
+      this.metrics.newFacts.push(new ExplainModel(factProve));
       this.metrics.markAsSuccess();
+    } else {
+      let goalProve = this.proveFact(this.metrics.goal);
+      if (goalProve) {
+        this.metrics.newFacts.push(goalProve.proves);
+        this.metrics.markAsSuccess();
+      }
     }
   };
 
@@ -65,5 +71,9 @@ export class BackwardInference extends Inference {
     return this.metrics.startFacts
       .map((sf) => sf.fact)
       .find((f) => this.isRequirementsMet(f, condition));
+  };
+
+  tryFindGoalInFacts = () => {
+    return this.findConditionProve(this.metrics.goal);
   };
 }

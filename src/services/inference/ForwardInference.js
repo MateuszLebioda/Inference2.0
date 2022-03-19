@@ -1,18 +1,24 @@
 /* eslint-disable no-loop-func */
+import ExplainModel from "../../model/metrics/ExplainModel";
 import { Inference } from "./Inference";
 
 class ForwardInference extends Inference {
   inferenceImplementation = () => {
     let activatedRule;
-    while ((activatedRule = this.findRuleToActivate())) {
-      this.metrics.addActivatedRule(activatedRule.rule);
-      this.metrics.addNewFactExplainModel(
-        activatedRule.rule,
-        activatedRule.newFactsExplainMethod
-      );
-      if (this.metrics.isGoalFulFilled()) {
-        this.metrics.markAsSuccess();
-        break;
+    if (this.metrics.isGoalFulFilled()) {
+      this.metrics.newFacts.push(new ExplainModel(this.metrics.goal));
+      this.metrics.markAsSuccess();
+    } else {
+      while ((activatedRule = this.findRuleToActivate())) {
+        this.metrics.addActivatedRule(activatedRule.rule);
+        this.metrics.addNewFactExplainModel(
+          activatedRule.rule,
+          activatedRule.newFactsExplainMethod
+        );
+        if (this.metrics.isGoalFulFilled()) {
+          this.metrics.markAsSuccess();
+          break;
+        }
       }
     }
     if (!this.metrics.goal && this.metrics.newFacts.length > 0) {
