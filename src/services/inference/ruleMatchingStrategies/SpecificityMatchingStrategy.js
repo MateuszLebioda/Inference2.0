@@ -1,9 +1,9 @@
 import { RuleMatchingStrategy } from "./RuleMatchingStrategy";
 
 export class SpecificityMatchingStrategy extends RuleMatchingStrategy {
-  matchRules(rules) {
+  matchRulesImplementation(rules) {
     return this.ruleService
-      .copyRulesAndMarkAsNotActive(rules)
+      .copyRules(rules)
       .sort((r1, r2) => this.compare(r1, r2));
   }
 

@@ -32,6 +32,7 @@ const ExplainForwardDialog = (props) => {
 
   return (
     <Dialog
+      style={{ maxWidth: "80vw", maxHeight: "90vh" }}
       visible={props.visible}
       header="Moduł objaśniający"
       onHide={() => {

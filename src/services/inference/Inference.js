@@ -62,12 +62,8 @@ export class Inference {
   };
 
   prepareInferenceRules = () => {
-    let inferenceRules = this.ruleService.copyRulesAndMarkAsNotActive([
+    return this.ruleService.copyRulesAndMarkAsNotActive([
       ...store.getState().file.value.rules,
     ]);
-
-    return this.metrics.matchingStrategy.implementation.matchRulesForward(
-      inferenceRules
-    );
   };
 }

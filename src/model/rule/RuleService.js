@@ -108,6 +108,10 @@ class RuleService {
     return tempRule;
   };
 
+  copyRules = (rules) => {
+    return rules.map((r) => this.copyRule(r));
+  };
+
   copyRulesAndMarkAsNotActive = (rules) => {
     let tempRules = [];
 

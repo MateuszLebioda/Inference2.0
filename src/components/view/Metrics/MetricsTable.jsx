@@ -44,8 +44,9 @@ const MetricsTable = (props) => {
       { header: "Faktów początkowych", value: "factCount" },
       { header: "Reguł początkowych", value: "ruleCount" },
       { header: "Atrybutów początkowych", value: "attributeCount" },
-    ].map((element) => (
+    ].map((element, index) => (
       <Column
+        key={index}
         bodyClassName="metrics-view-count-column metrics-table-content"
         headerClassName="metrics-view-count-column metrics-table-header metrics-table-header-center"
         field={element.value}

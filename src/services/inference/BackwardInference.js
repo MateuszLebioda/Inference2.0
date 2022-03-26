@@ -62,7 +62,7 @@ export class BackwardInference extends Inference {
         r.conclusion.value === conclusion.value
     );
 
-    return this.metrics.matchingStrategy.implementation.matchRulesBackward(
+    return this.metrics.matchingStrategy.implementation.matchRules(
       indirectHypotheses
     );
   };

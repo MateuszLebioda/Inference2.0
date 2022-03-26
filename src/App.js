@@ -12,10 +12,13 @@ import { addLocale, locale } from "primereact/api";
 import { PL_LOCALE } from "./locale";
 import Content from "./components/view/Content";
 import ErrorBoundary from "./components/view/errorBoundary/ErrorBoundary";
+import packageJson from "../package.json";
+
 const App = () => {
   const blockUI = useSelector((state) => state.block);
   addLocale("pl", PL_LOCALE);
   locale("pl");
+
   return (
     <>
       <BlockUI
@@ -32,6 +35,9 @@ const App = () => {
       <Navbar />
       <ErrorBoundary>
         <Content />
+        <div style={{ position: "absolute", right: 0, bottom: 0 }}>
+          v.{packageJson.version}
+        </div>
       </ErrorBoundary>
     </>
   );

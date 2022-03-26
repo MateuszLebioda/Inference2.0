@@ -28,26 +28,32 @@ class ForwardInference extends Inference {
 
   findRuleToActivate = () => {
     this.metrics.incrementIterations();
-    for (let r of this.inferenceRules) {
-      if (!r.activated) {
-        let ruleCheckAnswer = this.checkRule(r);
-        if (ruleCheckAnswer) {
-          r.activated = true;
-          return ruleCheckAnswer;
-        }
-      }
+    let conflictSet = this.applyStrategyRule(this.getConflictSet());
+    let ruleToActive = conflictSet.find((r) => !r.activated);
+    if (ruleToActive) {
+      this.inferenceRules.find(
+        (rule) => rule.id === ruleToActive.id
+      ).activated = true;
+      return this.checkRule(ruleToActive);
     }
   };
 
+  applyStrategyRule = (conflictSet) => {
+    return this.metrics.matchingStrategy.implementation.matchRules(conflictSet);
+  };
+
+  getConflictSet = () => {
+    return this.inferenceRules.filter((r) => {
+      this.metrics.incrementCheckedRules();
+      return this.isRulesConditionsMet(r).length > 0;
+    });
+  };
+
   checkRule = (rule) => {
-    this.metrics.incrementCheckedRules();
-    let newFactsExplainMethod = this.isRulesConditionsMet(rule);
-    if (newFactsExplainMethod.length > 0) {
-      return {
-        rule: rule,
-        newFactsExplainMethod: newFactsExplainMethod,
-      };
-    }
+    return {
+      rule: rule,
+      newFactsExplainMethod: this.isRulesConditionsMet(rule),
+    };
   };
 
   isRulesConditionsMet = (rule) => {

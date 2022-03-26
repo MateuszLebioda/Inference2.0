@@ -16,6 +16,8 @@ import MatchStrategyPicker from "./MatchStrategyPicker";
 const InferenceView = forwardRef((props, ref) => {
   const dispatch = useDispatch();
   const facts = useSelector((state) => state.file.value.facts);
+  const rules = useSelector((state) => state.file.value.rules);
+  const attributes = useSelector((state) => state.file.value.attributes);
   const [selectedFacts, setSelectedFacts] = useState([]);
   const [name, setName] = useState("");
   const [allFacts, setAllFacts] = useState(true);
@@ -41,6 +43,10 @@ const InferenceView = forwardRef((props, ref) => {
       });
     },
   }));
+
+  useEffect(() => {
+    setGoal(null);
+  }, [facts, rules, attributes]);
 
   useEffect(() => {
     dispatch(changeHistory(props.historyMessage));
