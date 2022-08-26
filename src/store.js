@@ -1,10 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import fileSlice from "./slice/FileSlice";
 import blockSlice from "./slice/BlockSlice";
+import historySlice from "./slice/HistorySlice";
 
-export default configureStore({
+const store = configureStore({
   reducer: {
-    files: fileSlice,
+    file: fileSlice,
     block: blockSlice,
+    history: historySlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
+
+export default store;

@@ -1,0 +1,53 @@
+.cursor-default {
+  cursor: default !important;
+}
+
+.w-1p {
+  width: 10% !important;
+}
+.w-2p {
+  width: 20% !important;
+}
+.w-3p {
+  width: 30% !important;
+}
+.w-4p {
+  width: 50% !important;
+}
+.w-6p {
+  width: 60% !important;
+}
+.w-7p {
+  width: 70% !important;
+}
+.w-8p {
+  width: 80% !important;
+}
+.w-9p {
+  width: 90% !important;
+}
+
+.h-1p {
+  height: 10% !important;
+}
+.h-2p {
+  height: 20% !important;
+}
+.h-3p {
+  height: 30% !important;
+}
+.h-4p {
+  height: 50% !important;
+}
+.h-6p {
+  height: 60% !important;
+}
+.h-7p {
+  height: 70% !important;
+}
+.h-8p {
+  height: 80% !important;
+}
+.h-9p {
+  height: 90% !important;
+}

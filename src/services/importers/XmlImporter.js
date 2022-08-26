@@ -3,8 +3,10 @@ import XMLParser from "react-xml-parser";
 import AttributeService from "../../model/attribute/AttributeService.js";
 import FactService from "../../model/fact/FactService.js";
 import { attributeType } from "../../model/attribute/AttributeType.js";
-import operator from "../../model/operator/Operator.js";
 import RuleService from "../../model/rule/RuleService.js";
+import StringComparator from "../tools/StringComparator.js";
+import AttributeCollectionService from "../../model/attribute/AttributeCollectionService.js";
+import { operator } from "../../model/operator/Operator.js";
 
 class XmlImporter extends Importer {
   parser = new XMLParser();
@@ -12,6 +14,7 @@ class XmlImporter extends Importer {
   factId = 0;
 
   attributeService = new AttributeService();
+  attributeCollectionService = new AttributeCollectionService();
   factService = new FactService();
   ruleService = new RuleService();
 
@@ -20,15 +23,12 @@ class XmlImporter extends Importer {
     let attributes = this.mapAttributes(xml);
     let facts = this.importFacts(xml);
     let rules = this.importRules(xml);
-    console.log(attributes);
-    console.log(facts);
-    console.log(rules);
     this.factId = 0;
-    return {
+    return Promise.resolve({
       attributes,
       facts,
       rules,
-    };
+    });
   };
 
   importAttributes = (file) => {
@@ -45,10 +45,13 @@ class XmlImporter extends Importer {
 
     xmlAttributes.forEach((xmlAttribute) => {
       let attribute = this.mapElementFromXmlToAttribute(xmlAttribute);
+      attribute.collections.sort((s1, s2) =>
+        StringComparator.compare(s1.value, s2.value)
+      );
       tempAttributes.push(attribute);
     });
 
-    return tempAttributes;
+    return tempAttributes.sort((a1, a2) => a1.value.localeCompare(a2.value));
   };
 
   mapElementFromXmlToAttribute = (element) => {
@@ -83,7 +86,7 @@ class XmlImporter extends Importer {
 
   mapParameterAttributeCollection = (element) => {
     return element.map((children) => {
-      return this.attributeService.createEmptyAttributeCollectionElement(
+      return this.attributeCollectionService.createEmptyAttributeCollectionElement(
         children.children[0].attributes.valueID,
         children.children[0].value
       );
@@ -102,7 +105,7 @@ class XmlImporter extends Importer {
         fact.operator !== operator.EQUALS
       ) {
         throw new Error(
-          "Fact have to be symbolic type, or continious with equals operator!"
+          "Fact have to be symbolic type, or continous with equals operator!"
         );
       }
       fact.id = this.factId++;
@@ -154,9 +157,10 @@ class XmlImporter extends Importer {
 
     let xmlFacts = object.children.find((o) => o.name === "rules").children;
 
-    xmlFacts.forEach((xmlFact) => {
-      let fact = this.mapElementFromXmlToRule(xmlFact);
-      tempRules.push(fact);
+    xmlFacts.forEach((xmlFact, id) => {
+      let rule = this.mapElementFromXmlToRule(xmlFact);
+      rule.id = id;
+      tempRules.push(rule);
     });
 
     return tempRules;
@@ -174,7 +178,7 @@ class XmlImporter extends Importer {
           tempFact.operator !== operator.EQUALS
         ) {
           throw new Error(
-            "Conculsion have to be symbolic type, or continious with equals operator!"
+            "Conclusion have to be symbolic type, or continous with equals operator!"
           );
         }
         tempFact.id = this.factId++;
