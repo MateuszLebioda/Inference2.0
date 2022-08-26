@@ -1,0 +1,7 @@
+.metrics-char-content-style canvas {
+  max-height: calc(100vh - 235px);
+}
+
+.accordion-style .p-accordion-content {
+  padding: 0 !important;
+}

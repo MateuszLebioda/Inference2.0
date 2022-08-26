@@ -1,0 +1,17 @@
+.fact-edit-grid-container {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr 7rem 1fr;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.fact-edit-conditions-panel {
+  max-height: 40vh;
+  overflow: hidden;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+
+.fact-edit-conclusion-panel {
+  width: calc(100% - 9px);
+}

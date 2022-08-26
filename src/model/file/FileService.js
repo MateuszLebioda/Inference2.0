@@ -6,6 +6,7 @@ class FileService {
       attributes: [],
       rules: [],
       facts: [],
+      metrics: [],
     };
   };
 }

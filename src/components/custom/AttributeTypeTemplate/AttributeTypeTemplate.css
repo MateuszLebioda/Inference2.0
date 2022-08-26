@@ -1,0 +1,15 @@
+.attribute-type-template-CONTINOUS {
+  padding: 5px;
+  border-radius: 7px;
+  font-weight: bold;
+  background-color: var(--continous-template-background);
+  color: var(--continous-template-color);
+}
+
+.attribute-type-template-SYMBOLIC {
+  padding: 5px;
+  border-radius: 7px;
+  font-weight: bold;
+  background-color: var(--symbolic-template-background);
+  color: var(--symbolic-template-color);
+}

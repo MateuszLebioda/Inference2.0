@@ -1,0 +1,12 @@
+.explain-char-container .p-organizationchart-node-content {
+  padding: 0rem !important;
+  height: 100%;
+}
+
+.explain-char-container .p-organizationchart-node-content div {
+  height: 100%;
+}
+
+.node-explain-char-header {
+  background-color: var(--bluegray-100);
+}
